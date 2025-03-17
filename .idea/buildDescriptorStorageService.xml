@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BuildDescriptorStorageService">
+    <option name="descriptors">
+      <list>
+        <BuildDescriptorImpl>
+          <option name="buildFinishedTimestamp" value="1742194893644" />
+          <option name="buildSessionID" value="6b2ba5c0-fd41-4db3-9607-70b70a31e14e" />
+          <option name="totalBuildTimeMs" value="58995" />
+        </BuildDescriptorImpl>
+        <BuildDescriptorImpl>
+          <option name="buildFinishedTimestamp" value="1742202272341" />
+          <option name="buildSessionID" value="0184ad44-fc5b-4689-ab59-1933f2f4e37d" />
+          <option name="totalBuildTimeMs" value="111440" />
+        </BuildDescriptorImpl>
+        <BuildDescriptorImpl>
+          <option name="buildFinishedTimestamp" value="1742202498480" />
+          <option name="buildSessionID" value="77ce677f-8c3a-438d-a0b2-af1b842b0075" />
+          <option name="totalBuildTimeMs" value="2879" />
+        </BuildDescriptorImpl>
+        <BuildDescriptorImpl>
+          <option name="buildFinishedTimestamp" value="1742202531989" />
+          <option name="buildSessionID" value="be10e324-60c6-4fc4-9a03-652eef0413d0" />
+          <option name="totalBuildTimeMs" value="1750" />
+        </BuildDescriptorImpl>
+        <BuildDescriptorImpl>
+          <option name="buildFinishedTimestamp" value="1742226491659" />
+          <option name="buildSessionID" value="dac7286b-4bef-446e-b5e1-eceac4be3989" />
+          <option name="totalBuildTimeMs" value="110996" />
+        </BuildDescriptorImpl>
+        <BuildDescriptorImpl>
+          <option name="buildFinishedTimestamp" value="1742226661370" />
+          <option name="buildSessionID" value="8f60e200-4003-441d-9f38-0ad19a6bae9a" />
+          <option name="totalBuildTimeMs" value="29545" />
+        </BuildDescriptorImpl>
+      </list>
+    </option>
+  </component>
+</project>
