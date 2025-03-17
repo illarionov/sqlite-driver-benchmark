@@ -41,4 +41,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Sqlite Driver Benchmark"
-include(":app")
+include(":bench")
