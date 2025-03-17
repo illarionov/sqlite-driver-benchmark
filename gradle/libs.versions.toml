@@ -1,5 +1,6 @@
 [versions]
-agp = "8.10.0-alpha08"
+agp = "8.9.0"
+chasm = "0.9.62"
 desugarJdkLibs = "2.1.5"
 kotlin = "2.1.10"
 androidxBenchmark = "1.4.0-alpha09"
@@ -15,6 +16,7 @@ wsoh-binary = "0.7"
 androidx-sqlite = { group = "androidx.sqlite", name = "sqlite-ktx", version.ref = "androidxSqlite" }
 androidx-sqlite-framework = { group = "androidx.sqlite", name = "sqlite-framework", version.ref = "androidxSqlite" }
 androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidxSqlite" }
+chasm-runtime = { group = "io.github.charlietap.chasm", name ="chasm", version.ref = "chasm" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -23,8 +25,11 @@ androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-junit4", 
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
 wsoh-sqlite-driver = { group = "at.released.wasm-sqlite-driver", name = "sqlite-driver", version.ref = "wsoh" }
 wsoh-sqlite-embedder-chicory = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chicory", version.ref = "wsoh" }
-wsoh-sqlite-binary = { group = "at.released.wasm-sqlite-driver", name = "sqlite-android-wasm-emscripten-icu-aot-349", version.ref = "wsoh-binary" }
-wsoh-sqlite-binary-plain = { group = "at.released.wasm-sqlite-driver", name = "sqlite-wasm-emscripten-aot-349", version.ref = "wsoh-binary" }
+wsoh-sqlite-embedder-chasm = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chasm", version.ref = "wsoh" }
+wsoh-sqlite-binary-aot = { group = "at.released.wasm-sqlite-driver", name = "sqlite-android-wasm-emscripten-icu-aot-349", version.ref = "wsoh-binary" }
+wsoh-sqlite-binary-aot-plain = { group = "at.released.wasm-sqlite-driver", name = "sqlite-wasm-emscripten-aot-349", version.ref = "wsoh-binary" }
+wsoh-sqlite-binary = { group = "at.released.wasm-sqlite-driver", name = "sqlite-android-wasm-emscripten-icu-349", version.ref = "wsoh-binary" }
+wsoh-sqlite-binary-plain = { group = "at.released.wasm-sqlite-driver", name = "sqlite-wasm-emscripten-349", version.ref = "wsoh-binary" }
 
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }

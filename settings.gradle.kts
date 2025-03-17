@@ -3,6 +3,7 @@
  * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
  * SPDX-License-Identifier: Apache-2.0
  */
+import java.net.URI
 
 pluginManagement {
     repositories {
@@ -37,6 +38,15 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            name = "PixnewsMaven"
+            url = URI("https://maven.pixnews.ru")
+            mavenContent {
+                includeModule("at.released.wasm-sqlite-driver", "sqlite-wasm-emscripten-349")
+                includeModule("at.released.wasm-sqlite-driver", "sqlite-android-wasm-emscripten-icu-349")
+                includeModule("at.released.wasm-sqlite-driver", "sqlite-wasm-emscripten-349-android")
+            }
+        }
     }
 }
 

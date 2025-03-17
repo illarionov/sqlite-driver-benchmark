@@ -13,18 +13,24 @@ android {
 
         testInstrumentationRunner = "androidx.benchmark.junit4.AndroidBenchmarkRunner"
         testInstrumentationRunnerArguments["androidx.benchmark.profiling.mode"] = "None"
+        testInstrumentationRunnerArguments["androidx.benchmark.suppressErrors"] = "DEBUGGABLE"
     }
 
-    testBuildType = "benchmark"
+    testBuildType = "release"
 
     testOptions {
         targetSdk = 35
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = false
+        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             isShrinkResources = false
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -33,10 +39,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 file("proguard-test-rules.pro"),
             )
-        }
-        create("benchmark") {
-            initWith(buildTypes["release"])
-            signingConfig = signingConfigs.getByName("debug")
+            @Suppress("UnstableApiUsage")
+            androidTest {
+                enableMinification = true
+            }
         }
     }
     compileOptions {
@@ -49,22 +55,20 @@ android {
     }
 }
 
-androidComponents {
-    beforeVariants(selector().withBuildType("release")) { variantBuilder ->
-        variantBuilder.hostTests.forEach { (_, builder) -> builder.enable = false }
-    }
-}
 
 dependencies {
     implementation(libs.androidx.benchmark)
     implementation(libs.androidx.sqlite)
     implementation(libs.androidx.sqlite.bundled)
     implementation(libs.androidx.sqlite.framework)
+    implementation(libs.chasm.runtime)
     implementation(libs.chicory.runtime)
-    implementation(libs.wsoh.sqlite.binary)
+    // implementation(libs.wsoh.sqlite.binary.aot)
+    implementation(libs.wsoh.sqlite.binary.aot.plain)
     implementation(libs.wsoh.sqlite.binary.plain)
     implementation(libs.wsoh.sqlite.driver)
     implementation(libs.wsoh.sqlite.embedder.chicory)
+    implementation(libs.wsoh.sqlite.embedder.chasm)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     testImplementation(libs.junit)

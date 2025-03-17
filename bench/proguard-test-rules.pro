@@ -5,24 +5,6 @@
     public static com.dylibso.chicory.wasm.WasmModule load();
 }
 
--keepclasseswithmembers class androidx.test.** { *; }
--keepclasseswithmembers class org.junit.** { *; }
--keepclasseswithmembers class junit.** { *; }
--keepclasseswithmembers @org.junit.runner.RunWith class * { *; }
--keepclasseswithmembers class androidx.benchmark.junit4.AndroidBenchmarkRunner { *; }
--keepclasseswithmembers class androidx.benchmark.IsolationActivity { *; }
--keepclasseswithmembers class androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner { *; }
-
--keep @org.junit.Test class *
--keep class * {
-    @org.junit.Test <methods>;
-    @org.junit.BeforeTest <methods>;
-    @org.junit.AfterTest <methods>;
-    @org.junit.Ignore <methods>;
-    @org.junit.Rule <methods>;
-    @org.junit.Rule <fields>;
-}
-
 -dontwarn com.dylibso.chicory.experimental.hostmodule.annotations.Buffer
 -dontwarn com.dylibso.chicory.experimental.hostmodule.annotations.HostModule
 -dontwarn com.dylibso.chicory.experimental.hostmodule.annotations.WasmExport

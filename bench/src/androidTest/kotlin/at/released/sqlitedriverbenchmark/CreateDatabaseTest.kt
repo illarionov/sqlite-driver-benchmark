@@ -15,10 +15,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import at.released.sqlitedriverbenchmark.database.measureSQLiteDriverBlock
+import at.released.wasm.sqlite.binary.SqliteWasmEmscripten349
 import at.released.wasm.sqlite.binary.aot.SqliteWasmEmscriptenAot349
 import at.released.wasm.sqlite.binary.aot.SqliteWasmEmscriptenAot349Machine
+import at.released.wasm.sqlite.binary.base.WasmSqliteConfiguration
 import at.released.wasm.sqlite.driver.WasmSQLiteDriver
+import at.released.wasm.sqlite.open.helper.chasm.ChasmSqliteEmbedder
 import at.released.wasm.sqlite.open.helper.chicory.ChicorySqliteEmbedder
+import io.github.charlietap.chasm.config.RuntimeConfig
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -62,7 +66,7 @@ class CreateDatabaseTest {
     }
 
     @Test
-    fun benchmarkCreateDatabase_ChicoryAotDriver() {
+    fun benchmarkCreateDatabase_ChicoryAot() {
         val driver = WasmSQLiteDriver(ChicorySqliteEmbedder) {
             openParams {
                 openFlags = setOf()
@@ -81,6 +85,55 @@ class CreateDatabaseTest {
                 version()
             }
         }
-        Log.i("SqliteBenchmark", "IcuAot349 version: $version")
+        Log.i("SqliteBenchmark", "ChicoryAot349 version: $version")
+    }
+
+    @Test
+    fun benchmarkCreateDatabase_Chicory() {
+        val driver = WasmSQLiteDriver(ChicorySqliteEmbedder, context) {
+            openParams {
+                openFlags = setOf()
+            }
+            embedder {
+                sqlite3Binary = object: WasmSqliteConfiguration by SqliteWasmEmscripten349 {
+                    override val wasmMinMemorySize = 64 * 1024 * 1024L
+                }
+            }
+        }
+        var version: String? = null
+        benchmarkRule.measureRepeated {
+            version = measureSQLiteDriverBlock(driver, null) {
+                repeat(1000) {
+                    version()
+                }
+                version()
+            }
+        }
+        Log.i("SqliteBenchmark", "Chicory349 version: $version")
+    }
+
+    @Test
+    fun benchmarkCreateDatabase_Chasm() {
+        val driver = WasmSQLiteDriver(ChasmSqliteEmbedder, context) {
+            openParams {
+                openFlags = setOf()
+            }
+            embedder {
+                sqlite3Binary = object: WasmSqliteConfiguration by SqliteWasmEmscripten349 {
+                    override val wasmMinMemorySize = 64 * 1024 * 1024L
+                }
+                runtimeConfig = RuntimeConfig(bytecodeFusion = true)
+            }
+        }
+        var version: String? = null
+        benchmarkRule.measureRepeated {
+            version = measureSQLiteDriverBlock(driver, null) {
+                repeat(1000) {
+                    version()
+                }
+                version()
+            }
+        }
+        Log.i("SqliteBenchmark", "Chasm349 version: $version")
     }
 }
