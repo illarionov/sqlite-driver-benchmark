@@ -190,6 +190,11 @@
             <pgp value="31BAE2E51D95E0F8AD9B7BCC40A3C4432BD7308C"/>
          </artifact>
       </component>
+      <component group="com.jsoizo" name="kotlin-csv-jvm" version="1.10.0">
+         <artifact name="kotlin-csv-jvm-1.10.0.jar">
+            <pgp value="0D6B5F0E107A267AD4607EBB40273EFC89F6F039"/>
+         </artifact>
+      </component>
       <component group="com.squareup" name="javawriter" version="2.5.0">
          <artifact name="javawriter-2.5.0.jar">
             <pgp value="90EE19787A7BCF6FD37A1E9180C08B1C29100955"/>

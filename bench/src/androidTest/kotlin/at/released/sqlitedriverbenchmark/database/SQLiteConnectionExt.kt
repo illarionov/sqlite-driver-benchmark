@@ -2,7 +2,23 @@ package at.released.sqlitedriverbenchmark.database
 
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteStatement
+import androidx.sqlite.execSQL
 import kotlin.use
+
+inline fun <R> SQLiteConnection.transaction(
+    isDefferred: Boolean = true,
+    crossinline block: () -> R
+): R {
+    execSQL(if (isDefferred) "BEGIN" else "BEGIN EXCLUSIVE")
+    val result =  try {
+        block()
+    } catch (ex: Throwable) {
+        execSQL("ROLLBACK")
+        throw ex
+    }
+    execSQL("COMMIT")
+    return result
+}
 
 internal fun SQLiteConnection.queryForBoolean(
     sql: String,
@@ -26,7 +42,6 @@ public fun SQLiteConnection.queryForLong(
     return queryForSingleResult(sql, SQLiteStatement::getLong, bindArgs = bindArgs)
 }
 
-@Suppress("LAMBDA_IS_NOT_LAST_PARAMETER")
 private fun <R : Any> SQLiteConnection.queryForSingleResult(
     sql: String,
     resultFetcher: (SQLiteStatement, Int) -> R?,

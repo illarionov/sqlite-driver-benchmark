@@ -3,6 +3,7 @@ agp = "8.9.0"
 chasm = "0.9.62"
 desugarJdkLibs = "2.1.5"
 kotlin = "2.1.10"
+kotlin-csv = "1.10.0"
 androidxBenchmark = "1.4.0-alpha09"
 androidxSqlite = "2.5.0-rc02"
 junit = "4.13.2"
@@ -23,6 +24,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-junit4", version.ref = "androidxBenchmark" }
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
+kotlin-csv = { group = "com.jsoizo", name = "kotlin-csv-jvm", version.ref = "kotlin-csv" }
 wsoh-sqlite-driver = { group = "at.released.wasm-sqlite-driver", name = "sqlite-driver", version.ref = "wsoh" }
 wsoh-sqlite-embedder-chicory = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chicory", version.ref = "wsoh" }
 wsoh-sqlite-embedder-chasm = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chasm", version.ref = "wsoh" }

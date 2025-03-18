@@ -1,41 +1,11 @@
 package at.released.sqlitedriverbenchmark.database
 
-import androidx.benchmark.junit4.BenchmarkRule
 import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.execSQL
-import java.io.File
-import kotlin.use
-
-fun <R> BenchmarkRule.Scope.measureSQLiteDriverBlock(
-    driver: SQLiteDriver,
-    path: File? = null,
-    block: TestSqliteConnection.() -> R,
-): R {
-    pauseMeasurement()
-    val fileName = path?.toString() ?: ":memory:"
-    val connection = driver.open(fileName)
-    return try {
-        resumeMeasurement()
-        block(TestSqliteConnection(connection))
-    } finally {
-        connection.close()
-    }
-}
-
-fun <R> SQLiteDriver.run(
-    path: File? = null,
-    block: TestSqliteConnection.() -> R,
-): R {
-    val fileName = path?.toString() ?: ":memory:"
-    return open(fileName).use { connection: SQLiteConnection ->
-        block(TestSqliteConnection(connection))
-    }
-}
 
 class TestSqliteConnection private constructor(
     val connection: SQLiteConnection,
-) : AutoCloseable {
+) : AutoCloseable, SQLiteConnection by connection {
     fun setupConnection() {
         CONNECTION_DEFAULTS.forEach(connection::execSQL)
     }
@@ -70,3 +40,4 @@ class TestSqliteConnection private constructor(
         }
     }
 }
+

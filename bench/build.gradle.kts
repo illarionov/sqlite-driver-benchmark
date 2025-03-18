@@ -41,7 +41,7 @@ android {
             )
             @Suppress("UnstableApiUsage")
             androidTest {
-                enableMinification = true
+                enableMinification = false
             }
         }
     }
@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.sqlite.framework)
     implementation(libs.chasm.runtime)
     implementation(libs.chicory.runtime)
+    implementation(libs.kotlin.csv)
     // implementation(libs.wsoh.sqlite.binary.aot)
     implementation(libs.wsoh.sqlite.binary.aot.plain)
     implementation(libs.wsoh.sqlite.binary.plain)
