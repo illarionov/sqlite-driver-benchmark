@@ -64,12 +64,11 @@ dependencies {
     implementation(libs.chasm.runtime)
     implementation(libs.chicory.runtime)
     implementation(libs.kotlin.csv)
-    // implementation(libs.wsoh.sqlite.binary.aot)
     implementation(libs.wsoh.sqlite.binary.aot.plain)
     implementation(libs.wsoh.sqlite.binary.plain)
     implementation(libs.wsoh.sqlite.driver)
-    implementation(libs.wsoh.sqlite.embedder.chicory)
     implementation(libs.wsoh.sqlite.embedder.chasm)
+    implementation(libs.wsoh.sqlite.embedder.chicory)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     testImplementation(libs.junit)

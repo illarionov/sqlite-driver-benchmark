@@ -10,7 +10,7 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 chicory = "1.1.1"
-wsoh = "0.1-beta01"
+wsoh = "0.1-beta02"
 wsoh-binary = "0.7"
 
 [libraries]

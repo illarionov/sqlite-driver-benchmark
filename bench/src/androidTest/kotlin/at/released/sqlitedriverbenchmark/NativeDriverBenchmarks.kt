@@ -11,7 +11,7 @@ import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import at.released.sqlitedriverbenchmark.database.benchmarkCreateDatabase
 import org.junit.Test
 
-private val MAX_INSERT_ENTRIES: Int = 5000
+private const val MAX_INSERT_ENTRIES: Int = 20000
 
 @NativeDrivers
 class NativeDriverBenchmarks : BaseBenchmarks() {

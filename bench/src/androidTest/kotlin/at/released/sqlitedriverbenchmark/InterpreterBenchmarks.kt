@@ -19,7 +19,7 @@ import at.released.wasm.sqlite.open.helper.chicory.ChicorySqliteEmbedder
 import io.github.charlietap.chasm.config.RuntimeConfig
 import org.junit.Test
 
-private const val MAX_INTERPRETER_INSERT_ENTITIES = 100
+private const val MAX_INTERPRETER_INSERT_ENTITIES = 1000
 
 @InterpreterDrivers
 class InterpreterBenchmarks : BaseBenchmarks() {

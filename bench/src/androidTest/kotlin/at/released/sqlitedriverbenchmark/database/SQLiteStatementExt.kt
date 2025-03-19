@@ -14,13 +14,7 @@ internal fun SQLiteStatement.bind(index: Int, arg: Any?) = when (arg) {
     is Float -> bindFloat(index, arg)
     is Int -> bindInt(index, arg)
     is Long -> bindLong(index, arg)
-    is String -> {
-        if (arg.isEmpty()) {
-            bindText(index, "\\0") //TODO: fix
-        } else {
-            bindText(index, arg)
-        }
-    }
+    is String -> bindText(index, arg)
     else -> error("Unsupported argument type $arg")
 }
 
