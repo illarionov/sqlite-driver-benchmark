@@ -6,82 +6,49 @@
 
 package at.released.sqlitedriverbenchmark
 
-import androidx.annotation.Keep
-import androidx.sqlite.driver.AndroidSQLiteDriver
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import at.released.sqlitedriverbenchmark.database.benchmarkCreateDatabase
-import at.released.wasm.sqlite.binary.SqliteWasmEmscripten349
-import at.released.wasm.sqlite.binary.aot.SqliteWasmEmscriptenAot349
-import at.released.wasm.sqlite.binary.aot.SqliteWasmEmscriptenAot349Machine
-import at.released.wasm.sqlite.binary.base.WasmSqliteConfiguration
-import at.released.wasm.sqlite.driver.WasmSQLiteDriver
-import at.released.wasm.sqlite.open.helper.chasm.ChasmSqliteEmbedder
-import at.released.wasm.sqlite.open.helper.chicory.ChicorySqliteEmbedder
-import io.github.charlietap.chasm.config.RuntimeConfig
-import org.junit.Test
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 
 private const val MAX_INTERPRETER_INSERT_ENTITIES = 1000
 
+// AndroidDriver for reference
 @InterpreterDrivers
-@Keep
-class InterpreterBenchmarks : BaseBenchmarks() {
-    // BundledDriver for reference
-    @Test
-    fun interpreters_create_database_BundledDriver() {
-        val driver = BundledSQLiteDriver()
-        benchmarkCreateDatabase(driver, "IsBundledDriver", MAX_INTERPRETER_INSERT_ENTITIES)
-    }
+class InterpreterBenchmarksAndroidDriver : Benchmarks(
+    driverFactory = ::createAndroidSqliteDriver,
+    driverName = "IsAndroidSQLiteDriver",
+    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    selectWithPagingStep = 40,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_1000,
+)
 
-    // FrameworkDriver for reference
-    @Test
-    fun interpreters_create_database_FrameworkDriver() {
-        val driver = AndroidSQLiteDriver()
-        benchmarkCreateDatabase(driver, "IsAndroidSQLiteDriver", MAX_INTERPRETER_INSERT_ENTITIES)
-    }
+// Chicory AOT Driver for reference
+@InterpreterDrivers
+class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
+    driverFactory = ::createChicoryAotDriver,
+    driverName = "IsChicoryAotDriver",
+    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    selectWithPagingStep = 50,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_1000,
+)
 
-    // ChicoryAot for reference
-    @Test
-    fun interpreters_create_database_ChicoryAot() {
-        val driver = WasmSQLiteDriver(ChicorySqliteEmbedder) {
-            openParams {
-                openFlags = setOf()
-            }
-            embedder {
-                sqlite3Binary = SqliteWasmEmscriptenAot349
-                machineFactory = ::SqliteWasmEmscriptenAot349Machine
-            }
-        }
-        benchmarkCreateDatabase(driver, "IsChicoryAot349", MAX_INTERPRETER_INSERT_ENTITIES)
-    }
+@InterpreterDrivers
+class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
+    driverFactory = ::createChicoryInterpreterDriver,
+    driverName = "IsChicoryInterpreterDriver",
+    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    selectWithPagingStep = 50,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_1000,
+)
 
-    @Test
-    fun interpreters_create_database_Chicory() {
-        val driver = WasmSQLiteDriver(ChicorySqliteEmbedder, context) {
-            openParams {
-                openFlags = setOf()
-            }
-            embedder {
-                sqlite3Binary = object: WasmSqliteConfiguration by SqliteWasmEmscripten349 {
-                    override val wasmMinMemorySize = 64 * 1024 * 1024L
-                }
-            }
-        }
-        benchmarkCreateDatabase(driver, "IsChicory349", MAX_INTERPRETER_INSERT_ENTITIES)
-    }
-
-    @Test
-    fun interpreters_create_database_Chasm() {
-        val driver = WasmSQLiteDriver(ChasmSqliteEmbedder, context) {
-            openParams {
-                openFlags = setOf()
-            }
-            embedder {
-                sqlite3Binary = object: WasmSqliteConfiguration by SqliteWasmEmscripten349 {
-                    override val wasmMinMemorySize = 64 * 1024 * 1024L
-                }
-                runtimeConfig = RuntimeConfig(bytecodeFusion = true)
-            }
-        }
-        benchmarkCreateDatabase(driver, "IsChasm349", MAX_INTERPRETER_INSERT_ENTITIES)
-    }
-}
+@InterpreterDrivers
+class InterpreterBenchmarksChasmInterpreterDriver : Benchmarks(
+    driverFactory = ::createChasmInterpreterDriver,
+    driverName = "IsChasmInterpreterDriver",
+    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    selectWithPagingStep = 40,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_1000,
+)

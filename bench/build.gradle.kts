@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.chasm.runtime)
     implementation(libs.chicory.runtime)
     implementation(libs.kotlin.csv)
+    implementation(libs.hash4j)
     implementation(libs.wsoh.sqlite.binary.aot.plain)
     implementation(libs.wsoh.sqlite.binary.plain)
     implementation(libs.wsoh.sqlite.driver)
@@ -72,6 +73,7 @@ dependencies {
 
     testImplementation(libs.junit)
 
+    androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }

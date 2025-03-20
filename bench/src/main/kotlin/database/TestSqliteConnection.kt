@@ -32,7 +32,7 @@ class TestSqliteConnection private constructor(
             "encoding='UTF-8'",
             "ignore_check_constraints=false",
             "page_size=4096",
-            "hard_heap_limit=${64*1024*1024}",
+            "hard_heap_limit=${256*1024*1024}",
             "secure_delete=1",
             "synchronous=1",
             "temp_store=1",

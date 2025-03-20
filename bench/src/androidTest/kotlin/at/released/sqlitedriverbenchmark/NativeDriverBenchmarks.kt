@@ -6,26 +6,27 @@
 
 package at.released.sqlitedriverbenchmark
 
-import androidx.annotation.Keep
-import androidx.sqlite.driver.AndroidSQLiteDriver
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import at.released.sqlitedriverbenchmark.database.benchmarkCreateDatabase
-import org.junit.Test
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1_000_000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 
 private const val MAX_INSERT_ENTRIES: Int = 20000
 
 @NativeDrivers
-@Keep
-class NativeDriverBenchmarks : BaseBenchmarks() {
-    @Test
-    fun native_create_database_BundledDriver() {
-        val driver = BundledSQLiteDriver()
-        benchmarkCreateDatabase(driver, "BundledDriver", MAX_INSERT_ENTRIES)
-    }
+class NativeBenchmarksBundledDriver : Benchmarks(
+    driverFactory = ::createBundledSqliteDriver,
+    driverName = "BundledSQLiteDriver",
+    createDatabaseMasInsertEntries = MAX_INSERT_ENTRIES,
+    selectWithPagingStep = 40,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_1_000_000,
+)
 
-    @Test
-    fun native_create_database_FrameworkDriver() {
-        val driver = AndroidSQLiteDriver()
-        benchmarkCreateDatabase(driver, "AndroidSQLiteDriver", MAX_INSERT_ENTRIES)
-    }
-}
+@NativeDrivers
+class NativeBenchmarksAndroidDriver : Benchmarks(
+    driverFactory = ::createAndroidSqliteDriver,
+    driverName = "AndroidSQLiteDriver",
+    createDatabaseMasInsertEntries = MAX_INSERT_ENTRIES,
+    selectWithPagingStep = 40,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_1_000_000,
+)

@@ -5,6 +5,22 @@
     public static com.dylibso.chicory.wasm.WasmModule load();
 }
 
+-keep class * extends at.released.sqlitedriverbenchmark.BaseBenchmarks { *; }
+
+-keep @at.released.sqlitedriverbenchmark.NativeDrivers class * {*;}
+-keep @at.released.sqlitedriverbenchmark.ChicoryDrivers class * {*;}
+-keep @at.released.sqlitedriverbenchmark.InterpreterDrivers class * {*;}
+
+-keep @org.junit.Test class * { *; }
+-keep class * {
+    @org.junit.Test <methods>;
+    @org.junit.BeforeTest <methods>;
+    @org.junit.AfterTest <methods>;
+    @org.junit.Ignore <methods>;
+    @org.junit.Rule <methods>;
+    @org.junit.Rule <fields>;
+}
+
 -dontwarn com.dylibso.chicory.experimental.hostmodule.annotations.Buffer
 -dontwarn com.dylibso.chicory.experimental.hostmodule.annotations.HostModule
 -dontwarn com.dylibso.chicory.experimental.hostmodule.annotations.WasmExport

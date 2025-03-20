@@ -7,28 +7,31 @@
 package at.released.sqlitedriverbenchmark.database
 
 import androidx.benchmark.junit4.BenchmarkRule
+import androidx.benchmark.junit4.measureRepeated
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import java.io.File
 import kotlin.use
 
-fun <R> BenchmarkRule.Scope.measureSQLiteDriverBlock(
+fun <R> BenchmarkRule.measureRepeatedSQLiteDriverBlock(
     driver: SQLiteDriver,
     path: File? = null,
     block: TestSqliteConnection.() -> R,
-): R {
-    pauseMeasurement()
+) {
     val fileName = path?.toString() ?: ":memory:"
-    val connection = driver.open(fileName)
-    return try {
-        resumeMeasurement()
-        block(TestSqliteConnection(connection))
-    } finally {
-        connection.close()
+    measureRepeated {
+        pauseMeasurement()
+        val connection = driver.open(fileName)
+        try {
+            resumeMeasurement()
+            block(TestSqliteConnection(connection))
+        } finally {
+            connection.close()
+        }
     }
 }
 
-fun <R> SQLiteDriver.run(
+fun <R> SQLiteDriver.execute(
     path: File? = null,
     block: TestSqliteConnection.() -> R,
 ): R {

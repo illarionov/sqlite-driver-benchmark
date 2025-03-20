@@ -6,6 +6,7 @@ kotlin = "2.1.10"
 kotlin-csv = "1.10.0"
 androidxBenchmark = "1.4.0-alpha09"
 androidxSqlite = "2.5.0-rc02"
+hash4j = "0.20.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -24,6 +25,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-junit4", version.ref = "androidxBenchmark" }
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
+hash4j = { group = "com.dynatrace.hash4j", name = "hash4j", version.ref = "hash4j" }
 kotlin-csv = { group = "com.jsoizo", name = "kotlin-csv-jvm", version.ref = "kotlin-csv" }
 wsoh-sqlite-driver = { group = "at.released.wasm-sqlite-driver", name = "sqlite-driver", version.ref = "wsoh" }
 wsoh-sqlite-embedder-chicory = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chicory", version.ref = "wsoh" }

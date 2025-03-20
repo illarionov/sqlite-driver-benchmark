@@ -6,8 +6,8 @@
 
 package at.released.sqlitedriverbenchmark
 
-import androidx.annotation.Keep
 import androidx.benchmark.ExperimentalBenchmarkConfigApi
+import androidx.benchmark.MicrobenchmarkConfig
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -16,11 +16,10 @@ import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-@Keep
-abstract class BaseBenchmarks {
+abstract class BaseBenchmarksTest {
     @OptIn(ExperimentalBenchmarkConfigApi::class)
     @get:Rule
-    val benchmarkRule = BenchmarkRule()
+    val benchmarkRule = BenchmarkRule(config = MicrobenchmarkConfig(warmupCount = 5))
 
     val context = InstrumentationRegistry.getInstrumentation().targetContext
 
