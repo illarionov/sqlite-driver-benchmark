@@ -8,7 +8,13 @@ package at.released.sqlitedriverbenchmark.database
 
 import androidx.sqlite.SQLiteStatement
 
-internal fun SQLiteStatement.bindArgs(args: Collection<Any?>) = args.forEachIndexed { index, arg ->
+internal fun SQLiteStatement.closeSilent() = try {
+    close()
+} catch (_: Throwable) {
+    // IGNORE
+}
+
+internal fun SQLiteStatement.bindArgs(vararg args: Any?) = args.forEachIndexed { index, arg ->
     bind(index + 1, arg)
 }
 

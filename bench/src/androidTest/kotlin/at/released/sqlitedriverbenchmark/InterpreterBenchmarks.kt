@@ -6,6 +6,7 @@
 
 package at.released.sqlitedriverbenchmark
 
+import androidx.annotation.Keep
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import at.released.sqlitedriverbenchmark.database.benchmarkCreateDatabase
@@ -22,6 +23,7 @@ import org.junit.Test
 private const val MAX_INTERPRETER_INSERT_ENTITIES = 1000
 
 @InterpreterDrivers
+@Keep
 class InterpreterBenchmarks : BaseBenchmarks() {
     // BundledDriver for reference
     @Test

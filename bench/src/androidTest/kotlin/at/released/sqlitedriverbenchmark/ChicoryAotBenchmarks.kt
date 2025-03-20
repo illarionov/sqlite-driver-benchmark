@@ -6,6 +6,7 @@
 
 package at.released.sqlitedriverbenchmark
 
+import androidx.annotation.Keep
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.AndroidSQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
@@ -20,6 +21,7 @@ import org.junit.Test
 private const val MAX_AOT_INSERT_ENTRIES: Int = 5000
 
 @ChicoryDrivers
+@Keep
 class ChicoryAotBenchmarks : BaseBenchmarks() {
     // BundledDriver for reference
     @Test

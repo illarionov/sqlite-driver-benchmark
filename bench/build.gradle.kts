@@ -28,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             isShrinkResources = false
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
@@ -41,7 +41,7 @@ android {
             )
             @Suppress("UnstableApiUsage")
             androidTest {
-                enableMinification = false
+                enableMinification = true
             }
         }
     }
@@ -54,7 +54,6 @@ android {
         jvmTarget = "17"
     }
 }
-
 
 dependencies {
     implementation(libs.androidx.benchmark)

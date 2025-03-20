@@ -30,7 +30,7 @@ internal fun SQLiteConnection.queryForBoolean(
     sql: String,
     vararg bindArgs: Any?,
 ): Boolean = prepare(sql).use { statement ->
-    statement.bindArgs(bindArgs.toList())
+    statement.bindArgs(*bindArgs)
     statement.step()
 }
 
@@ -53,7 +53,7 @@ private fun <R : Any> SQLiteConnection.queryForSingleResult(
     resultFetcher: (SQLiteStatement, Int) -> R?,
     vararg bindArgs: Any?,
 ): R? = prepare(sql).use { statement ->
-    statement.bindArgs(bindArgs.toList())
+    statement.bindArgs(*bindArgs)
     if (!statement.step()) {
         error("No row")
     }
@@ -72,6 +72,6 @@ public fun SQLiteConnection.queryTable(
     sql: String,
     vararg bindArgs: Any?,
 ): List<Map<String, String?>> = prepare(sql).use { statement ->
-    statement.bindArgs(bindArgs.toList())
+    statement.bindArgs(*bindArgs)
     statement.readResult()
 }
