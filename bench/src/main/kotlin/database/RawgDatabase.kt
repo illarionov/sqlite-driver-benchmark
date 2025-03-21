@@ -39,8 +39,6 @@ class RawgDatabase(
     }
 
     companion object {
-        const val TRANSACTION_WINDOW_SIZE = 1000
-
         private val RAWG_DATABASE_SCHEMA_RAW: List<String> = listOf(
             """
                 CREATE TABLE IF NOT EXISTS "game"(

@@ -36,6 +36,7 @@ private class RawgDatabaseLoader(
     private val connection: TestSqliteConnection,
     val lastInsertRowidStatement: SQLiteStatement,
     val insertGameStatement: SQLiteStatement,
+    val insertGameBatchStatement: SQLiteStatement,
     val insertGenreStatement: SQLiteStatement,
     val insertGameToGenreStatement: SQLiteStatement,
     val insertPlatformStatement: SQLiteStatement,
@@ -51,15 +52,18 @@ private class RawgDatabaseLoader(
         var transactionActive = true
         connection.execSQL("BEGIN EXCLUSIVE")
         try {
-            csvEntries.forEachIndexed { index: Int, csvEntry: List<String> ->
-                insertGameCsvEntry(csvEntry)
-                if ((index + 1) % RawgDatabase.TRANSACTION_WINDOW_SIZE == 0) {
-                    transactionActive = false
-                    connection.execSQL("COMMIT")
-                    connection.execSQL("BEGIN EXCLUSIVE")
-                    transactionActive = true
+            csvEntries
+                .map { GameCsvEntry(it) }
+                .chunked(INSERT_GAME_BATCH_SIZE)
+                .forEachIndexed { index: Int, csvEntries: List<GameCsvEntry> ->
+                    insertGameCsvEntriesBatch(csvEntries)
+                    if ((index + 1) % TRANSACTION_WINDOW_SIZE == 0) {
+                        transactionActive = false
+                        connection.execSQL("COMMIT")
+                        connection.execSQL("BEGIN EXCLUSIVE")
+                        transactionActive = true
+                    }
                 }
-            }
         } catch (ex: Throwable) {
             if (transactionActive) {
                 connection.execSQL("ROLLBACK")
@@ -70,36 +74,58 @@ private class RawgDatabaseLoader(
         connection.execSQL("COMMIT")
     }
 
-    private fun insertGameCsvEntry(csvEntry: List<String>) {
-        val id = csvEntry[0].toLong()
-        val name = csvEntry[1]
-        val released = csvEntry.getOrNull(2)
-        val rating = csvEntry.getOrNull(3)
-        val genres = csvEntry.getOrElse(4) { "" }
-        val platforms = csvEntry.getOrElse(5) { "" }
-        val tags = csvEntry.getOrElse(6) { "" }
-        val metacritic = csvEntry.getOrNull(7)
-        val developers = csvEntry.getOrElse(8) { "" }
-        val publishers = csvEntry.getOrElse(9) { "" }
-        val playtime = csvEntry.getOrNull(10)
-        val description = csvEntry.getOrNull(11)
+    private fun insertGameCsvEntriesBatch(csvEntries: List<GameCsvEntry>) {
+        if (csvEntries.size == INSERT_GAME_BATCH_SIZE) {
+            insertGameBatchStatement.reset()
+            csvEntries.forEachIndexed { idx, entry ->
+                insertGameBatchStatement.bindGameEntryArgs(idx, entry)
+            }
+            insertGameBatchStatement.step()
+        } else {
+            csvEntries.forEach { csvEntry ->
+                insertGameStatement.reset()
+                insertGameStatement.bindGameEntryArgs(0, csvEntry)
+                insertGameStatement.step()
+            }
+        }
 
-        insertGameStatement.reset()
-        insertGameStatement.bindArgs(
-            id,
-            name,
-            released,
-            rating,
-            tags,
-            metacritic,
-            playtime,
-            description
-        )
-        insertGameStatement.step()
+        csvEntries.forEach { csvEntry ->
+            val gameId = csvEntry.id
+            insertGenres(gameId, csvEntry.genres)
+            insertPlatforms(gameId, csvEntry.platforms)
+            insertCompanies(gameId, csvEntry.developers, csvEntry.publishers)
+        }
+    }
 
-        insertGenres(id, genres)
-        insertPlatforms(id, platforms)
-        insertCompanies(id, developers, publishers)
+    private fun SQLiteStatement.bindGameEntryArgs(
+        csvEntryNo: Int,
+        csvEntry: GameCsvEntry
+    ) {
+        var index = 1 + csvEntryNo * 8
+        bind(index++, csvEntry.id)
+        bind(index++, csvEntry.name)
+        bind(index++, csvEntry.released)
+        bind(index++, csvEntry.rating)
+        bind(index++, csvEntry.tags)
+        bind(index++, csvEntry.metacritic)
+        bind(index++, csvEntry.playtime)
+        bind(index, csvEntry.description)
+    }
+
+    @JvmInline
+    private value class GameCsvEntry(private val csvEntry: List<String>) {
+        val id: Long get() = csvEntry[0].toLong()
+        val name: String get() = csvEntry[1]
+        val released: String? get() = csvEntry.getIfNotBlank(11)
+        val rating: String? get() = csvEntry.getIfNotBlank(11)
+        val genres: String get() = csvEntry.getOrElse(4) { "" }
+        val platforms: String get() = csvEntry.getOrElse(5) { "" }
+        val tags: String get() = csvEntry.getOrElse(6) { "" }
+        val metacritic: String? get() = csvEntry.getIfNotBlank(11)
+        val developers: String get() = csvEntry.getOrElse(8) { "" }
+        val publishers: String get() = csvEntry.getOrElse(9) { "" }
+        val playtime: String? get() = csvEntry.getIfNotBlank(11)
+        val description: String? get() = csvEntry.getIfNotBlank(11)
     }
 
     private fun insertGenres(gameId: Long, genres: String) {
@@ -183,6 +209,7 @@ private class RawgDatabaseLoader(
     override fun close() {
         lastInsertRowidStatement.closeSilent()
         insertGameStatement.closeSilent()
+        insertGameBatchStatement.closeSilent()
         insertGameStatement.closeSilent()
         insertGenreStatement.closeSilent()
         insertGameToGenreStatement.closeSilent()
@@ -192,12 +219,27 @@ private class RawgDatabaseLoader(
         insertGameToCompanyStatement.closeSilent()
     }
 
-    private fun List<String>.getOrNull(idx: Int) = getOrElse(idx) { null }?.takeIf(String::isNotBlank)
-
     companion object {
+        const val TRANSACTION_WINDOW_SIZE = 2500
+        const val INSERT_GAME_BATCH_SIZE = 200
+        private val insertGameStatementColumns = listOf(
+            "id", "name", "released", "rating", "tags", "metacritic", "playtime", "description"
+        )
+        private val insertGameStatementPrefix = insertGameStatementColumns.joinToString(
+            prefix = "INSERT INTO game(",
+            postfix = ") VALUES"
+        )
+        private val insertGameStatementValues = insertGameStatementColumns
+            .joinToString(",", "(", ")") { "?" }
+        private val insertGameStatementValuesBatch =
+            List(INSERT_GAME_BATCH_SIZE) { insertGameStatementValues }.joinToString(",")
+
+        fun List<String>.getIfNotBlank(index: Int) = getOrNull(index)?.takeIf(String::isNotBlank)
+
         operator fun invoke(connection: TestSqliteConnection): RawgDatabaseLoader {
             var lastInsertRowidStatement: SQLiteStatement? = null
             var insertGameStatement: SQLiteStatement? = null
+            var insertGameBatchStatement: SQLiteStatement? = null
             var insertGenreStatement: SQLiteStatement? = null
             var insertGameToGenreStatement: SQLiteStatement? = null
             var insertPlatformStatement: SQLiteStatement? = null
@@ -207,10 +249,10 @@ private class RawgDatabaseLoader(
             try {
                 lastInsertRowidStatement = connection.prepare("SELECT last_insert_rowid()")
                 insertGameStatement = connection.prepare(
-                    """
-                    INSERT INTO game(id,name,released,rating,tags,metacritic,playtime,description)
-                        VALUES(?,?,?,?,?,?,?,?)
-                """
+                    "$insertGameStatementPrefix $insertGameStatementValues"
+                )
+                insertGameBatchStatement = connection.prepare(
+                    "$insertGameStatementPrefix $insertGameStatementValuesBatch"
                 )
                 insertGenreStatement = connection.prepare(
                     "INSERT INTO genre(name) VALUES(?)",
@@ -235,6 +277,7 @@ private class RawgDatabaseLoader(
                     connection = connection,
                     lastInsertRowidStatement = lastInsertRowidStatement,
                     insertGameStatement = insertGameStatement,
+                    insertGameBatchStatement = insertGameBatchStatement,
                     insertGenreStatement = insertGenreStatement,
                     insertGameToGenreStatement = insertGameToGenreStatement,
                     insertPlatformStatement = insertPlatformStatement,
@@ -245,6 +288,7 @@ private class RawgDatabaseLoader(
             } catch (ex: Throwable) {
                 lastInsertRowidStatement?.closeSilent()
                 insertGameStatement?.closeSilent()
+                insertGameBatchStatement?.closeSilent()
                 insertGenreStatement?.closeSilent()
                 insertGameToGenreStatement?.closeSilent()
                 insertPlatformStatement?.closeSilent()

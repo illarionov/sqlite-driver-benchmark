@@ -8,6 +8,7 @@ package at.released.sqlitedriverbenchmark
 
 import android.content.Context
 import androidx.sqlite.driver.AndroidSQLiteDriver
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import at.released.sqlitedriverbenchmark.database.RawgDatabase
 import at.released.sqlitedriverbenchmark.database.execute
 import java.io.File
@@ -36,7 +37,7 @@ object TestDatabaseHolder {
 
     private fun prepareBlankDatabase(context: Context): File {
         val databaseFile = File(context.cacheDir, BLANK_DATABASE_NAME)
-        val driver = AndroidSQLiteDriver()
+        val driver = BundledSQLiteDriver()
         driver.execute(databaseFile) {
             val database = RawgDatabase(this, context.assets)
             database.createDatabaseFromAssets()

@@ -15,6 +15,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.File
 import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
 import kotlin.use
 
 @NativeDrivers
@@ -22,11 +23,13 @@ class SimpleDatabaseTests : BaseBenchmarksTest() {
     @Test
     fun runCompanies() {
         val driver = createChasmInterpreterDriver(context)
-        val testDatabasePath = TestDatabaseHolder.createTestDatabase(
-            context = context,
-            dstFile = File(tempFolder.root, "db-selectwithpaging.sqlite")
-        )
-        Log.i("SqliteBenchmark", "createTestDatabase done")
+        val (testDatabasePath, time) = measureTimedValue {
+            TestDatabaseHolder.createTestDatabase(
+                context = context,
+                dstFile = File(tempFolder.root, "db-selectwithpaging.sqlite")
+            )
+        }
+        Log.i("SqliteBenchmark", "Database created in $time")
 
         driver.execute(testDatabasePath) {
             Log.i("SqliteBenchmark", "Version: ${version()} done")
