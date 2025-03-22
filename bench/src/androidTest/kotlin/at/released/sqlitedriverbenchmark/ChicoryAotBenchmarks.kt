@@ -6,30 +6,29 @@
 
 package at.released.sqlitedriverbenchmark
 
+import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_5000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
-import org.junit.Test
 
-private const val MAX_AOT_INSERT_ENTRIES: Int = 5000
+private val CHICORY_AOT_BENCHMARK_CONFIG = BenchmarksConfig(
+    createDatabaseMaxInsertEntries = 5000,
+    selectWithPagingStep = 50,
+    selectWithPagingHashCount = GAMES_HASH_1000,
+    companiesHashCount = COMPANIES_HASH_5000
+)
 
 // AndroidDriver for reference
 @ChicoryDrivers
 class ChicoryAotBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "ChicoryAotAndroidSQLiteDriver",
-    createDatabaseMaxInsertEntries = MAX_AOT_INSERT_ENTRIES,
-    selectWithPagingStep = 50,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_5000
+    config = CHICORY_AOT_BENCHMARK_CONFIG,
 )
 
 @ChicoryDrivers
 class ChicoryAotBenchmarksAotDriver : Benchmarks(
     driverFactory = ::createChicoryAotDriver,
     driverName = "ChicoryAot349SQLiteDriver",
-    createDatabaseMaxInsertEntries = MAX_AOT_INSERT_ENTRIES,
-    selectWithPagingStep = 50,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_5000
+    config = CHICORY_AOT_BENCHMARK_CONFIG,
 )
 

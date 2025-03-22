@@ -6,20 +6,26 @@
 
 package at.released.sqlitedriverbenchmark
 
+import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_5000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_100
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
+import org.junit.Test
 
-private const val MAX_INTERPRETER_INSERT_ENTITIES = 1000
+private val INTERPRETERS_BENCHMARK_CONFIG = BenchmarksConfig(
+    createDatabaseMaxInsertEntries = 1000,
+    selectWithPagingStep = 10,
+    selectWithPagingHashCount = GAMES_HASH_100,
+    companiesHashCount = COMPANIES_HASH_1000,
+)
 
 // AndroidDriver for reference
 @InterpreterDrivers
 class InterpreterBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "IsAndroidSQLiteDriver",
-    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
-    selectWithPagingStep = 40,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_1000,
+    config = INTERPRETERS_BENCHMARK_CONFIG,
 )
 
 // Chicory AOT Driver for reference
@@ -27,28 +33,22 @@ class InterpreterBenchmarksAndroidDriver : Benchmarks(
 class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
     driverFactory = ::createChicoryAotDriver,
     driverName = "IsChicoryAotDriver",
-    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
-    selectWithPagingStep = 50,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_1000,
-)
+    config = INTERPRETERS_BENCHMARK_CONFIG,
+) {
+    @Test
+    override fun create_database() = super.create_database()
+}
 
 @InterpreterDrivers
 class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
     driverFactory = ::createChicoryInterpreterDriver,
     driverName = "IsChicoryInterpreterDriver",
-    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
-    selectWithPagingStep = 50,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_1000,
+    config = INTERPRETERS_BENCHMARK_CONFIG,
 )
 
 @InterpreterDrivers
 class InterpreterBenchmarksChasmInterpreterDriver : Benchmarks(
     driverFactory = ::createChasmInterpreterDriver,
     driverName = "IsChasmInterpreterDriver",
-    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
-    selectWithPagingStep = 40,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_1000,
+    config = INTERPRETERS_BENCHMARK_CONFIG,
 )

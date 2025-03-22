@@ -6,27 +6,27 @@
 
 package at.released.sqlitedriverbenchmark
 
+import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1_000_000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 
-private const val MAX_INSERT_ENTRIES: Int = 20000
-
-@NativeDrivers
-class NativeBenchmarksBundledDriver : Benchmarks(
-    driverFactory = ::createBundledSqliteDriver,
-    driverName = "BundledSQLiteDriver",
-    createDatabaseMaxInsertEntries = MAX_INSERT_ENTRIES,
+private val NATIVE_BENCHMARK_CONFIG = BenchmarksConfig(
+    createDatabaseMaxInsertEntries = 20000,
     selectWithPagingStep = 40,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1_000_000,
 )
 
 @NativeDrivers
+class NativeBenchmarksBundledDriver : Benchmarks(
+    driverFactory = ::createBundledSqliteDriver,
+    driverName = "BundledSQLiteDriver",
+    config = NATIVE_BENCHMARK_CONFIG,
+)
+
+@NativeDrivers
 class NativeBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "AndroidSQLiteDriver",
-    createDatabaseMaxInsertEntries = MAX_INSERT_ENTRIES,
-    selectWithPagingStep = 40,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_1_000_000,
+    config = NATIVE_BENCHMARK_CONFIG,
 )

@@ -6,7 +6,6 @@
 
 package at.released.sqlitedriverbenchmark.database
 
-import android.util.Log
 import androidx.sqlite.SQLiteStatement
 import com.dynatrace.hash4j.hashing.HashSink
 import com.dynatrace.hash4j.hashing.Hashing
@@ -41,6 +40,7 @@ class RawgDatabaseGameDao private constructor(
 
     public companion object {
         val GAMES_HASH_1000 = HashWithCount(-0x494f78e9218684b2, 1000)
+        val GAMES_HASH_100 = HashWithCount(0x17f3eb165fd91f68, 100)
         val COMPANIES_HASH_1_000_000 = HashWithCount(0xcab31b759d02b5e, 1_000_000)
         val COMPANIES_HASH_5000 = HashWithCount(-0x7cd81af22fc88b04, 5_000)
         val COMPANIES_HASH_1000 = HashWithCount(0x2d06800538d394c2, 1_000)

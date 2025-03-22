@@ -26,10 +26,7 @@ import java.util.concurrent.atomic.AtomicLong
 abstract class Benchmarks(
     val driverFactory: (Context) -> SQLiteDriver,
     val driverName: String,
-    val createDatabaseMaxInsertEntries: Int = 20000,
-    val selectWithPagingStep: Int = 40,
-    val selectWithPagingHashCount: HashWithCount = GAMES_HASH_1000,
-    val companiesHashCount: HashWithCount = COMPANIES_HASH_1_000_000,
+    val config: BenchmarksConfig,
 ) : BaseBenchmarksTest() {
     val driver: SQLiteDriver get() = driverFactory(context)
 
@@ -47,7 +44,7 @@ abstract class Benchmarks(
             },
         ) {
             val database = RawgDatabase(this, this@Benchmarks.context.assets)
-            database.createDatabaseFromAssets(createDatabaseMaxInsertEntries)
+            database.createDatabaseFromAssets(config.createDatabaseMaxInsertEntries)
             insertEntities = queryForString("SELECT COUNT(id) from game")
         }
         Log.i("SqliteBenchmark", "$driverName entities: $insertEntities")
@@ -66,12 +63,12 @@ abstract class Benchmarks(
         ) {
             gamesHash = RawgDatabaseGameDao(this).use { gameDao ->
                 gameDao.calculateGamesHash(
-                    maxEntries = selectWithPagingHashCount.count,
-                    step = selectWithPagingStep
+                    maxEntries = config.selectWithPagingHashCount.count,
+                    step = config.selectWithPagingStep
                 )
             }
         }
-        assertEquals(selectWithPagingHashCount, gamesHash)
+        assertEquals(config.selectWithPagingHashCount, gamesHash)
     }
 
     @Test
@@ -83,9 +80,16 @@ abstract class Benchmarks(
         var companiesHash: Long = 0
         benchmarkRule.measureRepeatedSQLiteDriverBlock(driver, { testDatabasePath }) {
             companiesHash = RawgDatabaseGameDao(this).use { gameDao ->
-                gameDao.calculateCompaniesHash(companiesHashCount.count.toLong())
+                gameDao.calculateCompaniesHash(config.companiesHashCount.count.toLong())
             }
         }
-        assertEquals(companiesHashCount.hash, companiesHash)
+        assertEquals(config.companiesHashCount.hash, companiesHash)
     }
+
+    public data class BenchmarksConfig(
+        val createDatabaseMaxInsertEntries: Int = 20000,
+        val selectWithPagingStep: Int = 40,
+        val selectWithPagingHashCount: HashWithCount = GAMES_HASH_1000,
+        val companiesHashCount: HashWithCount = COMPANIES_HASH_1_000_000,
+    )
 }

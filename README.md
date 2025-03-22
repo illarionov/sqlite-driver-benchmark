@@ -50,7 +50,7 @@ This command runs Chicory AOT only.
 ./gradlew bench:conAT -Pandroid.testInstrumentationRunnerArguments.annotation=at.released.sqlitedriverbenchmark.InterpreterDrivers
 
 ```
-This command runs Interpeters benchmarks only.
+This command runs Interpreters benchmarks only.
 
 
 [Android Microbenchmark]: https://developer.android.com/topic/performance/benchmarking/microbenchmark-overview
