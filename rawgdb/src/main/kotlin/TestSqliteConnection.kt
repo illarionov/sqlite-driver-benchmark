@@ -12,10 +12,6 @@ import androidx.sqlite.execSQL
 class TestSqliteConnection private constructor(
     val connection: SQLiteConnection,
 ) : AutoCloseable, SQLiteConnection by connection {
-    fun setupConnection() {
-        CONNECTION_DEFAULTS.forEach(connection::execSQL)
-    }
-
     fun version(): String =
         connection.queryForString("SELECT sqlite_version()") ?: "Version is null"
 
@@ -23,7 +19,7 @@ class TestSqliteConnection private constructor(
         connection.close()
     }
 
-    internal companion object {
+    public companion object {
         private val CONNECTION_DEFAULTS: List<String> = listOf(
             "journal_size_limit=-1",
             "locking_mode=EXCLUSIVE",
@@ -42,8 +38,9 @@ class TestSqliteConnection private constructor(
             "journal_mode=WAL",
         ).map { "PRAGMA $it" }
 
-        operator fun invoke(connection: SQLiteConnection): TestSqliteConnection {
-            return TestSqliteConnection(connection).also(TestSqliteConnection::setupConnection)
+        fun SQLiteConnection.setupRawgDbDefaults(): TestSqliteConnection {
+            CONNECTION_DEFAULTS.forEach(this::execSQL)
+            return TestSqliteConnection(this)
         }
     }
 }

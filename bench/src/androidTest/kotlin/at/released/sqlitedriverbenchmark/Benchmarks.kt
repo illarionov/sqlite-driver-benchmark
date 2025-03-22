@@ -9,14 +9,12 @@ package at.released.sqlitedriverbenchmark
 import android.content.Context
 import android.util.Log
 import androidx.sqlite.SQLiteDriver
-import at.released.sqlitedriverbenchmark.database.RawgDatabase
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1_000_000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.HashWithCount
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.calculateCompaniesHash
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.calculateGamesHash
-import at.released.sqlitedriverbenchmark.database.measureRepeatedSQLiteDriverBlock
 import at.released.sqlitedriverbenchmark.database.queryForString
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -43,8 +41,7 @@ abstract class Benchmarks(
                 )
             },
         ) {
-            val database = RawgDatabase(this, this@Benchmarks.context.assets)
-            database.createDatabaseFromAssets(config.createDatabaseMaxInsertEntries)
+            context.createRawgDatabase(this, config.createDatabaseMaxInsertEntries)
             insertEntities = queryForString("SELECT COUNT(id) from game")
         }
         Log.i("SqliteBenchmark", "$driverName entities: $insertEntities")

@@ -7,41 +7,32 @@
 package at.released.sqlitedriverbenchmark
 
 import android.content.Context
-import androidx.sqlite.driver.AndroidSQLiteDriver
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import at.released.sqlitedriverbenchmark.database.RawgDatabase
-import at.released.sqlitedriverbenchmark.database.execute
+import androidx.sqlite.SQLiteConnection
+import at.released.sqlitedriverbenchmark.database.importRawgDatabase
 import java.io.File
 
-object TestDatabaseHolder {
-    private const val BLANK_DATABASE_NAME = "rawg-blank.sqlite"
-    private val lock = Any()
-    private var testDatabasePath: File? = null
+const val RAWG_GAMES_DATA_CSV_PATH = "rawg-games-dataset/rawg_games_data.csv"
+const val RAWG_SQL_PATH = "rawg_games_data.sql"
 
+internal fun Context.createRawgDatabase(
+    connection: SQLiteConnection,
+    maxEntries: Int? = null
+) = assets.open(RAWG_GAMES_DATA_CSV_PATH).use { stream ->
+    importRawgDatabase(
+        connection = connection,
+        csvSource = stream,
+        maxEntries = maxEntries
+    )
+}
+
+object TestDatabaseHolder {
     fun createTestDatabase(
         context: Context,
         dstFile: File
-    ): File = synchronized(lock) {
-        val blankDatabase = getDatabaseBlank(context)
-        blankDatabase.copyTo(dstFile, overwrite = false)
+    ): File = dstFile.outputStream().buffered().use { out ->
+        context.assets.open(RAWG_SQL_PATH).buffered().use { inStream ->
+            inStream.copyTo(out)
+        }
         return dstFile
-    }
-
-    private fun getDatabaseBlank(context: Context): File = synchronized(lock) {
-        return testDatabasePath.let { cachedPath ->
-            cachedPath ?: prepareBlankDatabase(context).also {
-                testDatabasePath = it
-            }
-        }
-    }
-
-    private fun prepareBlankDatabase(context: Context): File {
-        val databaseFile = File(context.cacheDir, BLANK_DATABASE_NAME)
-        val driver = BundledSQLiteDriver()
-        driver.execute(databaseFile) {
-            val database = RawgDatabase(this, context.assets)
-            database.createDatabaseFromAssets()
-        }
-        return databaseFile
     }
 }

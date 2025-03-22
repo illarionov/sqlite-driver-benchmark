@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package at.released.sqlitedriverbenchmark.database
+package at.released.sqlitedriverbenchmark
 
 import androidx.benchmark.junit4.BenchmarkRule
 import androidx.benchmark.junit4.measureRepeated
-import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
+import at.released.sqlitedriverbenchmark.database.TestSqliteConnection
+import at.released.sqlitedriverbenchmark.database.TestSqliteConnection.Companion.setupRawgDbDefaults
 import java.io.File
-import kotlin.use
 
 fun <R> BenchmarkRule.measureRepeatedSQLiteDriverBlock(
     driver: SQLiteDriver,
@@ -20,23 +20,13 @@ fun <R> BenchmarkRule.measureRepeatedSQLiteDriverBlock(
 ) {
     measureRepeated {
         pauseMeasurement()
-        val fileName = path?.invoke()?.toString() ?: ":memory:"
-        val connection = driver.open(fileName)
+        val databaseFile = path?.invoke()?.toString() ?: ":memory:"
+        val connection = driver.open(databaseFile)
         try {
             resumeMeasurement()
-            block(TestSqliteConnection(connection))
+            block(connection.setupRawgDbDefaults())
         } finally {
             connection.close()
         }
-    }
-}
-
-fun <R> SQLiteDriver.execute(
-    path: File? = null,
-    block: TestSqliteConnection.() -> R,
-): R {
-    val fileName = path?.toString() ?: ":memory:"
-    return open(fileName).use { connection: SQLiteConnection ->
-        block(TestSqliteConnection(connection))
     }
 }

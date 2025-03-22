@@ -1,4 +1,12 @@
+/*
+ * SPDX-FileCopyrightText: 2025 Alexey Illarionov and the wasm-sqlite-open-helper project contributors
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import at.released.sqlitedriverbenchmark.gradle.PrepareDatabaseTask
+
 plugins {
+    id("at.released.sqlitedriverbenchmark.gradle.prefilldb")
     alias(libs.plugins.android.library)
     alias(libs.plugins.androidx.benchmark)
     alias(libs.plugins.kotlin.android)
@@ -55,14 +63,30 @@ android {
     }
 }
 
+private val rawgGamesCsvPath = layout.projectDirectory
+    .file("src/main/assets/rawg-games-dataset/rawg_games_data.csv")
+
+androidComponents {
+    onVariants { variant ->
+        val prefillDatabaseTask = tasks.register<PrepareDatabaseTask>("${variant.name}PrefillDatabse") {
+            inputCsv = rawgGamesCsvPath
+            sqlFileName = "rawg_games_data.sql"
+        }
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            prefillDatabaseTask,
+            PrepareDatabaseTask::outputDirectory
+        )
+    }
+}
+
 dependencies {
+    implementation("at.released.sqlitedriverbenchmark:rawgdb")
     implementation(libs.androidx.benchmark)
     implementation(libs.androidx.sqlite)
     implementation(libs.androidx.sqlite.bundled)
     implementation(libs.androidx.sqlite.framework)
     implementation(libs.chasm.runtime)
     implementation(libs.chicory.runtime)
-    implementation(libs.kotlin.csv)
     implementation(libs.hash4j)
     implementation(libs.wsoh.sqlite.binary.aot.plain)
     implementation(libs.wsoh.sqlite.binary.plain)
@@ -77,3 +101,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+

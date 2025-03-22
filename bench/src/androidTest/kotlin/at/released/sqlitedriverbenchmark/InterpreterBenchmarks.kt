@@ -8,9 +8,7 @@ package at.released.sqlitedriverbenchmark
 
 import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1000
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_5000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_100
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 import org.junit.Test
 
 private val INTERPRETERS_BENCHMARK_CONFIG = BenchmarksConfig(
@@ -34,10 +32,7 @@ class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
     driverFactory = ::createChicoryAotDriver,
     driverName = "IsChicoryAotDriver",
     config = INTERPRETERS_BENCHMARK_CONFIG,
-) {
-    @Test
-    override fun create_database() = super.create_database()
-}
+)
 
 @InterpreterDrivers
 class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(

@@ -41,6 +41,7 @@
          <trusted-key id="47504B76CF89C15C0512D9AFE16AB52D79FD224F" group="com.google.api.grpc" name="proto-google-common-protos"/>
          <trusted-key id="4DB1A49729B053CAF015CEE9A6ADFC93EF34893E" group="org.hamcrest"/>
          <trusted-key id="694621A7227D8D5289699830ABE9F3126BB741C1" group="^com[.]google($|([.].*))" regex="true"/>
+         <trusted-key id="696B6199A2A9D8C29CE78CC0D041CAD2E452550F" group="com.google.protobuf"/>
          <trusted-key id="6F538074CCEBF35F28AF9B066A0975F8B1127B83" group="org.jetbrains.kotlin"/>
          <trusted-key id="7B121B76A7ED6CE6E60AD51784E913A8E3A748C0" group="org.bouncycastle"/>
          <trusted-key id="7B79ADD11F8A779FE90FD3D0893A028475557671">
@@ -210,6 +211,11 @@
             <pgp value="4F7E32D440EF90A83011A8FC6425559C47CC79C4"/>
          </artifact>
       </component>
+      <component group="commons-io" name="commons-io" version="2.13.0">
+         <artifact name="commons-io-2.13.0.jar">
+            <pgp value="2DB4F1EF0FA761ECC4EA935C86FDC7E2A11262CB"/>
+         </artifact>
+      </component>
       <component group="commons-io" name="commons-io" version="2.16.1">
          <artifact name="commons-io-2.16.1.jar">
             <pgp value="2DB4F1EF0FA761ECC4EA935C86FDC7E2A11262CB"/>
@@ -290,6 +296,11 @@
             <pgp value="32118CF76C9EC5D918E54967CA80D1F0EB6CA4BA"/>
          </artifact>
       </component>
+      <component group="org.gradle.kotlin" name="gradle-kotlin-dsl-plugins" version="5.2.0">
+         <artifact name="gradle-kotlin-dsl-plugins-5.2.0.jar">
+            <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
+         </artifact>
+      </component>
       <component group="org.gradle.toolchains" name="foojay-resolver" version="0.9.0">
          <artifact name="foojay-resolver-0.9.0.jar">
             <pgp value="1BD97A6A154E7810EE0BC832E2F38302C8075E3D"/>
@@ -328,6 +339,11 @@
       <component group="org.slf4j" name="slf4j-api" version="1.7.30">
          <artifact name="slf4j-api-1.7.30.jar">
             <pgp value="475F3B8E59E6E63AA78067482C7B12F2A511E325"/>
+         </artifact>
+      </component>
+      <component group="org.tensorflow" name="tensorflow-lite-metadata" version="0.1.0-rc2">
+         <artifact name="tensorflow-lite-metadata-0.1.0-rc2.jar">
+            <pgp value="DB0597E3144342256BC81E3EC727D053C4481CF5"/>
          </artifact>
       </component>
       <component group="org.tensorflow" name="tensorflow-lite-metadata" version="0.2.0">

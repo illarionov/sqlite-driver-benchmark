@@ -6,19 +6,40 @@
 
 package at.released.sqlitedriverbenchmark.database
 
-import android.content.res.AssetManager
+import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteStatement
 import androidx.sqlite.execSQL
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseSchema.RAWG_DATABASE_INDICIES
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseSchema.RAWG_DATABASE_SCHEMA_RAW
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import java.io.InputStream
 
-private const val RAWG_GAMES_DATA_CSV = "rawg-games-dataset/rawg_games_data.csv"
-
-fun loadGamesFromAssets(
-    connection: TestSqliteConnection,
-    assetManager: AssetManager,
+public fun importRawgDatabase(
+    connection: SQLiteConnection,
+    csvSource: InputStream,
     maxEntries: Int? = null
 ) {
-    csvReader().open(assetManager.open(RAWG_GAMES_DATA_CSV)) {
+    RAWG_DATABASE_SCHEMA_RAW.forEach(connection::execSQL)
+    connection.execSQL("PRAGMA foreign_keys=OFF")
+    connection.execSQL("PRAGMA ignore_check_constraints=ON")
+    connection.execSQL("PRAGMA journal_mode=OFF")
+    connection.execSQL("PRAGMA synchronous=0")
+    try {
+        connection.importGames(csvSource, maxEntries)
+    } finally {
+        connection.execSQL("PRAGMA foreign_keys=1")
+        connection.execSQL("PRAGMA ignore_check_constraints=false")
+        connection.execSQL("PRAGMA journal_mode=WAL")
+        connection.execSQL("PRAGMA synchronous=1")
+    }
+    RAWG_DATABASE_INDICIES.forEach(connection::execSQL)
+}
+
+private fun SQLiteConnection.importGames(
+    inputStream: InputStream,
+    maxEntries: Int? = null
+) {
+    csvReader().open(inputStream) {
         val entries: Sequence<List<String>> = this.readAllAsSequence(fieldsNum = 12)
             .drop(1)
             .run {
@@ -28,12 +49,12 @@ fun loadGamesFromAssets(
                     this
                 }
             }
-        RawgDatabaseLoader(connection).use { it.insertGames(entries) }
+        RawgDatabaseImporter(this@importGames).use { it.insertGames(entries) }
     }
 }
 
-private class RawgDatabaseLoader(
-    private val connection: TestSqliteConnection,
+private class RawgDatabaseImporter(
+    private val connection: SQLiteConnection,
     val lastInsertRowidStatement: SQLiteStatement,
     val insertGameStatement: SQLiteStatement,
     val insertGameBatchStatement: SQLiteStatement,
@@ -112,22 +133,6 @@ private class RawgDatabaseLoader(
         bind(index, csvEntry.description)
     }
 
-    @JvmInline
-    private value class GameCsvEntry(private val csvEntry: List<String>) {
-        val id: Long get() = csvEntry[0].toLong()
-        val name: String get() = csvEntry[1]
-        val released: String? get() = csvEntry.getIfNotBlank(2)
-        val rating: String? get() = csvEntry.getIfNotBlank(3)
-        val genres: String get() = csvEntry.getOrElse(4) { "" }
-        val platforms: String get() = csvEntry.getOrElse(5) { "" }
-        val tags: String get() = csvEntry.getOrElse(6) { "" }
-        val metacritic: String? get() = csvEntry.getIfNotBlank(7)
-        val developers: String get() = csvEntry.getOrElse(8) { "" }
-        val publishers: String get() = csvEntry.getOrElse(9) { "" }
-        val playtime: String? get() = csvEntry.getIfNotBlank(10)
-        val description: String? get() = csvEntry.getIfNotBlank(11)
-    }
-
     private fun insertGenres(gameId: Long, genres: String) {
         genres.split(", ").filter { it.isNotBlank() }.forEach { genre ->
             val genreId = this.genres.getOrPut(genre) {
@@ -169,7 +174,7 @@ private class RawgDatabaseLoader(
     }
 
     private fun insertCompanies(gameId: Long, developers: String, publishers: String) {
-        val companies = buildMap {
+        val companies = buildMap<String, MutableSet<Char>> {
             developers.split(", ").forEach { developer ->
                 this.getOrPut(developer, ::mutableSetOf) += 'D'
             }
@@ -219,6 +224,22 @@ private class RawgDatabaseLoader(
         insertGameToCompanyStatement.closeSilent()
     }
 
+    @JvmInline
+    private value class GameCsvEntry(private val csvEntry: List<String>) {
+        val id: Long get() = csvEntry[0].toLong()
+        val name: String get() = csvEntry[1]
+        val released: String? get() = csvEntry.getIfNotBlank(2)
+        val rating: String? get() = csvEntry.getIfNotBlank(3)
+        val genres: String get() = csvEntry.getOrElse(4) { "" }
+        val platforms: String get() = csvEntry.getOrElse(5) { "" }
+        val tags: String get() = csvEntry.getOrElse(6) { "" }
+        val metacritic: String? get() = csvEntry.getIfNotBlank(7)
+        val developers: String get() = csvEntry.getOrElse(8) { "" }
+        val publishers: String get() = csvEntry.getOrElse(9) { "" }
+        val playtime: String? get() = csvEntry.getIfNotBlank(10)
+        val description: String? get() = csvEntry.getIfNotBlank(11)
+    }
+
     companion object {
         const val TRANSACTION_WINDOW_SIZE = 2500
         const val INSERT_GAME_BATCH_SIZE = 200
@@ -236,7 +257,7 @@ private class RawgDatabaseLoader(
 
         fun List<String>.getIfNotBlank(index: Int) = getOrNull(index)?.takeIf(String::isNotBlank)
 
-        operator fun invoke(connection: TestSqliteConnection): RawgDatabaseLoader {
+        operator fun invoke(connection: SQLiteConnection): RawgDatabaseImporter {
             var lastInsertRowidStatement: SQLiteStatement? = null
             var insertGameStatement: SQLiteStatement? = null
             var insertGameBatchStatement: SQLiteStatement? = null
@@ -273,7 +294,7 @@ private class RawgDatabaseLoader(
                     "INSERT INTO game_company(game_id, company_id, type) VALUES(?,?,?)",
                 )
 
-                return RawgDatabaseLoader(
+                return RawgDatabaseImporter(
                     connection = connection,
                     lastInsertRowidStatement = lastInsertRowidStatement,
                     insertGameStatement = insertGameStatement,

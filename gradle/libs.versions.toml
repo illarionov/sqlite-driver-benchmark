@@ -1,8 +1,8 @@
 [versions]
 agp = "8.9.0"
-chasm = "0.9.62"
+chasm = "0.9.63"
 desugarJdkLibs = "2.1.5"
-kotlin = "2.1.10"
+kotlin = "2.1.20"
 kotlin-csv = "1.10.0"
 androidxBenchmark = "1.4.0-alpha09"
 androidxSqlite = "2.5.0-rc02"
@@ -15,7 +15,7 @@ wsoh = "0.1-beta02"
 wsoh-binary = "0.7"
 
 [libraries]
-androidx-sqlite = { group = "androidx.sqlite", name = "sqlite-ktx", version.ref = "androidxSqlite" }
+androidx-sqlite = { group = "androidx.sqlite", name = "sqlite", version.ref = "androidxSqlite" }
 androidx-sqlite-framework = { group = "androidx.sqlite", name = "sqlite-framework", version.ref = "androidxSqlite" }
 androidx-sqlite-bundled = { group = "androidx.sqlite", name = "sqlite-bundled", version.ref = "androidxSqlite" }
 chasm-runtime = { group = "io.github.charlietap.chasm", name ="chasm", version.ref = "chasm" }
@@ -39,4 +39,6 @@ wsoh-sqlite-binary-plain = { group = "at.released.wasm-sqlite-driver", name = "s
 android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-benchmark = { id = "androidx.benchmark", version.ref = "androidxBenchmark" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
