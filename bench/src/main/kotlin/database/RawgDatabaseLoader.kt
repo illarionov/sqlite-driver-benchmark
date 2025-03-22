@@ -116,15 +116,15 @@ private class RawgDatabaseLoader(
     private value class GameCsvEntry(private val csvEntry: List<String>) {
         val id: Long get() = csvEntry[0].toLong()
         val name: String get() = csvEntry[1]
-        val released: String? get() = csvEntry.getIfNotBlank(11)
-        val rating: String? get() = csvEntry.getIfNotBlank(11)
+        val released: String? get() = csvEntry.getIfNotBlank(2)
+        val rating: String? get() = csvEntry.getIfNotBlank(3)
         val genres: String get() = csvEntry.getOrElse(4) { "" }
         val platforms: String get() = csvEntry.getOrElse(5) { "" }
         val tags: String get() = csvEntry.getOrElse(6) { "" }
-        val metacritic: String? get() = csvEntry.getIfNotBlank(11)
+        val metacritic: String? get() = csvEntry.getIfNotBlank(7)
         val developers: String get() = csvEntry.getOrElse(8) { "" }
         val publishers: String get() = csvEntry.getOrElse(9) { "" }
-        val playtime: String? get() = csvEntry.getIfNotBlank(11)
+        val playtime: String? get() = csvEntry.getIfNotBlank(10)
         val description: String? get() = csvEntry.getIfNotBlank(11)
     }
 

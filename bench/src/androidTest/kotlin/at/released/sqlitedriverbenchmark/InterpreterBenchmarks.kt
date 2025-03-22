@@ -16,7 +16,7 @@ private const val MAX_INTERPRETER_INSERT_ENTITIES = 1000
 class InterpreterBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "IsAndroidSQLiteDriver",
-    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
     selectWithPagingStep = 40,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1000,
@@ -27,7 +27,7 @@ class InterpreterBenchmarksAndroidDriver : Benchmarks(
 class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
     driverFactory = ::createChicoryAotDriver,
     driverName = "IsChicoryAotDriver",
-    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
     selectWithPagingStep = 50,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1000,
@@ -37,7 +37,7 @@ class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
 class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
     driverFactory = ::createChicoryInterpreterDriver,
     driverName = "IsChicoryInterpreterDriver",
-    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
     selectWithPagingStep = 50,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1000,
@@ -47,7 +47,7 @@ class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
 class InterpreterBenchmarksChasmInterpreterDriver : Benchmarks(
     driverFactory = ::createChasmInterpreterDriver,
     driverName = "IsChasmInterpreterDriver",
-    createDatabaseMasInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
+    createDatabaseMaxInsertEntries = MAX_INTERPRETER_INSERT_ENTITIES,
     selectWithPagingStep = 40,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1000,

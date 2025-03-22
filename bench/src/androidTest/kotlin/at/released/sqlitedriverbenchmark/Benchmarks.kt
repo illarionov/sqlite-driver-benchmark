@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicLong
 abstract class Benchmarks(
     val driverFactory: (Context) -> SQLiteDriver,
     val driverName: String,
-    val createDatabaseMasInsertEntries: Int = 20000,
+    val createDatabaseMaxInsertEntries: Int = 20000,
     val selectWithPagingStep: Int = 40,
     val selectWithPagingHashCount: HashWithCount = GAMES_HASH_1000,
     val companiesHashCount: HashWithCount = COMPANIES_HASH_1_000_000,
@@ -39,13 +39,15 @@ abstract class Benchmarks(
         val id = AtomicLong(1)
         benchmarkRule.measureRepeatedSQLiteDriverBlock(
             driver = driver,
-            path = File(
-                this@Benchmarks.tempFolder.root,
-                "db-${driverName}-${id.getAndAdd(1)}.sqlite"
-            ),
+            path = {
+                File(
+                    this@Benchmarks.tempFolder.root,
+                    "db-${driverName}-${id.getAndAdd(1)}.sqlite"
+                )
+            },
         ) {
             val database = RawgDatabase(this, this@Benchmarks.context.assets)
-            database.createDatabaseFromAssets(createDatabaseMasInsertEntries)
+            database.createDatabaseFromAssets(createDatabaseMaxInsertEntries)
             insertEntities = queryForString("SELECT COUNT(id) from game")
         }
         Log.i("SqliteBenchmark", "$driverName entities: $insertEntities")
@@ -60,7 +62,7 @@ abstract class Benchmarks(
         )
         benchmarkRule.measureRepeatedSQLiteDriverBlock(
             driver = driver,
-            path = testDatabasePath
+            path = { testDatabasePath }
         ) {
             gamesHash = RawgDatabaseGameDao(this).use { gameDao ->
                 gameDao.calculateGamesHash(
@@ -79,7 +81,7 @@ abstract class Benchmarks(
             dstFile = File(tempFolder.root, "db-${driverName}-selectcompanies.sqlite")
         )
         var companiesHash: Long = 0
-        benchmarkRule.measureRepeatedSQLiteDriverBlock(driver, testDatabasePath) {
+        benchmarkRule.measureRepeatedSQLiteDriverBlock(driver, { testDatabasePath }) {
             companiesHash = RawgDatabaseGameDao(this).use { gameDao ->
                 gameDao.calculateCompaniesHash(companiesHashCount.count.toLong())
             }

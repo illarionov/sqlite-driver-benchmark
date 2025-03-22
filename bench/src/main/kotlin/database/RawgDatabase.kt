@@ -15,8 +15,8 @@ class RawgDatabase(
 ) {
     fun createDatabaseFromAssets(maxEntries: Int? = null) {
         createRawDatabaseSchema()
-        connection.execSQL("PRAGMA foreign_keys=0")
-        connection.execSQL("PRAGMA ignore_check_constraints=true")
+        connection.execSQL("PRAGMA foreign_keys=OFF")
+        connection.execSQL("PRAGMA ignore_check_constraints=ON")
         connection.execSQL("PRAGMA journal_mode=OFF")
         connection.execSQL("PRAGMA synchronous=0")
         try {

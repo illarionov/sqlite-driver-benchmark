@@ -15,7 +15,7 @@ private const val MAX_INSERT_ENTRIES: Int = 20000
 class NativeBenchmarksBundledDriver : Benchmarks(
     driverFactory = ::createBundledSqliteDriver,
     driverName = "BundledSQLiteDriver",
-    createDatabaseMasInsertEntries = MAX_INSERT_ENTRIES,
+    createDatabaseMaxInsertEntries = MAX_INSERT_ENTRIES,
     selectWithPagingStep = 40,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1_000_000,
@@ -25,7 +25,7 @@ class NativeBenchmarksBundledDriver : Benchmarks(
 class NativeBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "AndroidSQLiteDriver",
-    createDatabaseMasInsertEntries = MAX_INSERT_ENTRIES,
+    createDatabaseMaxInsertEntries = MAX_INSERT_ENTRIES,
     selectWithPagingStep = 40,
     selectWithPagingHashCount = GAMES_HASH_1000,
     companiesHashCount = COMPANIES_HASH_1_000_000,

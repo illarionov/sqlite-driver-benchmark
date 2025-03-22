@@ -15,12 +15,12 @@ import kotlin.use
 
 fun <R> BenchmarkRule.measureRepeatedSQLiteDriverBlock(
     driver: SQLiteDriver,
-    path: File? = null,
+    path: (() -> File)? = null,
     block: TestSqliteConnection.() -> R,
 ) {
-    val fileName = path?.toString() ?: ":memory:"
     measureRepeated {
         pauseMeasurement()
+        val fileName = path?.invoke()?.toString() ?: ":memory:"
         val connection = driver.open(fileName)
         try {
             resumeMeasurement()
