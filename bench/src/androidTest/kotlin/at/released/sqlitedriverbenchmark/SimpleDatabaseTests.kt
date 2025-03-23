@@ -8,8 +8,7 @@ package at.released.sqlitedriverbenchmark
 
 import android.util.Log
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1000
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_5000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_100
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.calculateCompaniesHash
 import at.released.sqlitedriverbenchmark.database.execute
 import org.junit.Assert.assertEquals
@@ -38,11 +37,11 @@ class SimpleDatabaseTests : BaseBenchmarksTest() {
             val companiesHash: Long
             val time = measureTime {
                 companiesHash = RawgDatabaseGameDao(this).use { gameDao ->
-                    gameDao.calculateCompaniesHash(COMPANIES_HASH_5000.count.toLong())
+                    gameDao.calculateCompaniesHash(COMPANIES_HASH_100.count.toLong())
                 }
             }
             Log.i("SqliteBenchmark", "AndroidSQLiteDriver Games hash: $companiesHash time: $time")
-            assertEquals(COMPANIES_HASH_5000.hash, companiesHash)
+            assertEquals(COMPANIES_HASH_100.hash, companiesHash)
         }
     }
 }

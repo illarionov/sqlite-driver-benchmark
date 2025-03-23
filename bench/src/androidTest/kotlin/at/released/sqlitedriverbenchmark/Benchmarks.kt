@@ -8,24 +8,31 @@ package at.released.sqlitedriverbenchmark
 
 import android.content.Context
 import android.util.Log
+import androidx.benchmark.ExperimentalBenchmarkConfigApi
+import androidx.benchmark.MicrobenchmarkConfig
 import androidx.sqlite.SQLiteDriver
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1_000_000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.HashWithCount
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.SELECT_COMPANIES_STATEMENT
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.SELECT_GAMES_REQUEST
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.calculateCompaniesHash
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.calculateGamesHash
+import at.released.sqlitedriverbenchmark.database.execute
 import at.released.sqlitedriverbenchmark.database.queryForString
+import at.released.sqlitedriverbenchmark.database.queryTable
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 
+@OptIn(ExperimentalBenchmarkConfigApi::class)
 abstract class Benchmarks(
     val driverFactory: (Context) -> SQLiteDriver,
     val driverName: String,
     val config: BenchmarksConfig,
-) : BaseBenchmarksTest() {
+) : BaseBenchmarksTest(config.microbenchmarkConfig) {
     val driver: SQLiteDriver get() = driverFactory(context)
 
     @Test
@@ -54,6 +61,12 @@ abstract class Benchmarks(
             context = context,
             dstFile = File(tempFolder.root, "db-${driverName}-selectwithpaging.sqlite")
         )
+
+        val queryPlan = driver.execute(testDatabasePath) {
+            queryTable("EXPLAIN QUERY PLAN $SELECT_GAMES_REQUEST")
+        }
+        Log.i("SqliteBenchmark", "$driverName Select games query plan: $queryPlan")
+
         benchmarkRule.measureRepeatedSQLiteDriverBlock(
             driver = driver,
             path = { testDatabasePath }
@@ -74,6 +87,12 @@ abstract class Benchmarks(
             context = context,
             dstFile = File(tempFolder.root, "db-${driverName}-selectcompanies.sqlite")
         )
+
+        val queryPlan = driver.execute(testDatabasePath) {
+            queryTable("EXPLAIN QUERY PLAN $SELECT_COMPANIES_STATEMENT")
+        }
+        Log.i("SqliteBenchmark", "$driverName Select companies query plan: $queryPlan")
+
         var companiesHash: Long = 0
         benchmarkRule.measureRepeatedSQLiteDriverBlock(driver, { testDatabasePath }) {
             companiesHash = RawgDatabaseGameDao(this).use { gameDao ->
@@ -88,5 +107,6 @@ abstract class Benchmarks(
         val selectWithPagingStep: Int = 40,
         val selectWithPagingHashCount: HashWithCount = GAMES_HASH_1000,
         val companiesHashCount: HashWithCount = COMPANIES_HASH_1_000_000,
+        val microbenchmarkConfig: MicrobenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5),
     )
 }

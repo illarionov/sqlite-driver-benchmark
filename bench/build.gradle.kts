@@ -4,6 +4,7 @@
  */
 
 import at.released.sqlitedriverbenchmark.gradle.PrepareDatabaseTask
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("at.released.sqlitedriverbenchmark.gradle.prefilldb")
@@ -68,10 +69,11 @@ private val rawgGamesCsvPath = layout.projectDirectory
 
 androidComponents {
     onVariants { variant ->
-        val prefillDatabaseTask = tasks.register<PrepareDatabaseTask>("${variant.name}PrefillDatabse") {
-            inputCsv = rawgGamesCsvPath
-            sqlFileName = "rawg_games_data.sql"
-        }
+        val prefillDatabaseTask =
+            tasks.register<PrepareDatabaseTask>("${variant.name}PrefillDatabse") {
+                inputCsv = rawgGamesCsvPath
+                sqlFileName = "rawg_games_data.sql"
+            }
         variant.sources.assets?.addGeneratedSourceDirectory(
             prefillDatabaseTask,
             PrepareDatabaseTask::outputDirectory

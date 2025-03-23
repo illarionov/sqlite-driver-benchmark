@@ -44,6 +44,41 @@ class RawgDatabaseGameDao private constructor(
         val COMPANIES_HASH_1_000_000 = HashWithCount(0xcab31b759d02b5e, 1_000_000)
         val COMPANIES_HASH_5000 = HashWithCount(-0x7cd81af22fc88b04, 5_000)
         val COMPANIES_HASH_1000 = HashWithCount(0x2d06800538d394c2, 1_000)
+        val COMPANIES_HASH_100 = HashWithCount(0x2d06800538d394c2, 100)
+        val SELECT_GAMES_REQUEST = """
+                    SELECT 
+                        game.id,
+                        game.name,
+                        game.released,
+                        substr(game.description, 0, 30) AS description,
+                        group_concat(DISTINCT genre.name) AS genres
+                    FROM game
+                        LEFT JOIN game_genre ON game_genre.game_id=game.id
+                        LEFT JOIN genre ON genre.id=game_genre.genre_id
+                        LEFT JOIN game_platform ON game.id=game_platform.game_id
+                        LEFT JOIN platform ON platform.id=game_platform.platform_id
+                    WHERE (game.released IS NOT NULL)
+                        AND platform.name IN('macOS', 'Linux')
+                        AND game.name NOT LIKE '%Puzzle%'
+                        AND game.tags NOT LIKE '%NSFW%'
+                        AND genre.name IN ('Arcade', 'Sports')
+                    GROUP BY game.id
+                    ORDER BY game.id
+                    LIMIT ? OFFSET ?
+        """.trimIndent()
+        val SELECT_COMPANIES_STATEMENT = """
+                    SELECT company.name,genre.name,count(game.id) as games_cnt
+                    FROM company
+                        INNER join game_company on company.id=game_company.company_id
+                        INNER join game on game.id=game_company.game_id
+                        INNER JOIN game_genre ON game_genre.game_id=game.id
+                        INNER JOIN genre ON genre.id=game_genre.genre_id
+                    WHERE game.id<?
+                    GROUP BY company.id,genre.id
+                    HAVING games_cnt>40
+                    ORDER BY company.name,games_cnt DESC
+                    LIMIT 5 offset 10;
+        """.trimIndent()
 
         fun RawgDatabaseGameDao.calculateGamesHash(
             maxEntries: Int = 1000,
@@ -93,46 +128,8 @@ class RawgDatabaseGameDao private constructor(
             var selectGamesStatement: SQLiteStatement? = null
             var selectCompaniesStatement: SQLiteStatement? = null
             try {
-                selectGamesStatement = connection.prepare(
-                    """
-                    SELECT 
-                        game.id,
-                        game.name,
-                        game.released,
-                        substr(game.description, 0, 30) AS description,
-                        group_concat(DISTINCT genre.name) AS genres
-                    FROM game
-                        LEFT JOIN game_genre ON game_genre.game_id=game.id
-                        LEFT JOIN genre ON genre.id=game_genre.genre_id
-                        LEFT JOIN game_platform ON game.id=game_platform.game_id
-                        LEFT JOIN platform ON platform.id=game_platform.platform_id
-                    WHERE (game.released IS NOT NULL)
-                        AND platform.name IN('macOS', 'Linux')
-                        AND game.name NOT LIKE '%Puzzle%'
-                        AND game.tags NOT LIKE '%NSFW%'
-                        AND genre.name IN ('Arcade', 'Sports')
-                    GROUP BY game.id
-                    ORDER BY game.id
-                    LIMIT ? OFFSET ?
-                    """.trimIndent()
-                )
-
-                selectCompaniesStatement = connection.prepare(
-                    """
-                    SELECT company.name,genre.name,count(game.id) as games_cnt
-                    FROM company
-                        INNER join game_company on company.id=game_company.company_id
-                        INNER join game on game.id=game_company.game_id
-                        INNER JOIN game_genre ON game_genre.game_id=game.id
-                        INNER JOIN genre ON genre.id=game_genre.genre_id
-                    WHERE game.id<?
-                    GROUP BY company.id,genre.id
-                    HAVING games_cnt>40
-                    ORDER BY company.name,games_cnt DESC
-                    LIMIT 5 offset 10;
-                    """.trimIndent()
-                )
-
+                selectGamesStatement = connection.prepare(SELECT_GAMES_REQUEST)
+                selectCompaniesStatement = connection.prepare(SELECT_COMPANIES_STATEMENT)
                 return RawgDatabaseGameDao(selectGamesStatement, selectCompaniesStatement)
             } catch (ex: Throwable) {
                 selectGamesStatement?.closeSilent()

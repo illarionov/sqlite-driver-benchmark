@@ -16,10 +16,13 @@ import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-abstract class BaseBenchmarksTest {
+@OptIn(ExperimentalBenchmarkConfigApi::class)
+abstract class BaseBenchmarksTest constructor(
+    val microbenchmarkConfig: MicrobenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5)
+) {
     @OptIn(ExperimentalBenchmarkConfigApi::class)
     @get:Rule
-    val benchmarkRule = BenchmarkRule(config = MicrobenchmarkConfig(warmupCount = 5))
+    val benchmarkRule = BenchmarkRule(config = microbenchmarkConfig)
 
     val context = InstrumentationRegistry.getInstrumentation().targetContext
 

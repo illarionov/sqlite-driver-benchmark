@@ -6,15 +6,21 @@
 
 package at.released.sqlitedriverbenchmark
 
+import androidx.benchmark.ExperimentalBenchmarkConfigApi
+import androidx.benchmark.MicrobenchmarkConfig
 import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_5000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_100
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 
+@OptIn(ExperimentalBenchmarkConfigApi::class)
 private val CHICORY_AOT_BENCHMARK_CONFIG = BenchmarksConfig(
     createDatabaseMaxInsertEntries = 5000,
-    selectWithPagingStep = 50,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_5000
+    selectWithPagingStep = 25,
+    selectWithPagingHashCount = GAMES_HASH_100,
+    companiesHashCount = COMPANIES_HASH_1000,
+    microbenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5, measurementCount = 20),
 )
 
 // AndroidDriver for reference
