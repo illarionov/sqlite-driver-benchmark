@@ -14,7 +14,7 @@ import java.io.File
 const val RAWG_GAMES_DATA_CSV_PATH = "rawg-games-dataset/rawg_games_data.csv"
 const val RAWG_SQL_PATH = "rawg_games_data.sql"
 
-internal fun Context.createRawgDatabase(
+internal fun Context.createRawgDatabaseFromCsv(
     connection: SQLiteConnection,
     maxEntries: Int? = null
 ) = assets.open(RAWG_GAMES_DATA_CSV_PATH).use { stream ->
@@ -25,14 +25,9 @@ internal fun Context.createRawgDatabase(
     )
 }
 
-object TestDatabaseHolder {
-    fun createTestDatabase(
-        context: Context,
-        dstFile: File
-    ): File = dstFile.outputStream().buffered().use { out ->
-        context.assets.open(RAWG_SQL_PATH).buffered().use { inStream ->
-            inStream.copyTo(out)
-        }
-        return dstFile
+fun Context.copyPreparedRawgDatabase(dst: File): File = dst.outputStream().buffered().use { out ->
+    assets.open(RAWG_SQL_PATH).buffered().use { inStream ->
+        inStream.copyTo(out)
     }
+    return dst
 }

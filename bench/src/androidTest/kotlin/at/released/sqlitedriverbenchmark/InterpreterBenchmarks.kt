@@ -26,6 +26,7 @@ private val INTERPRETERS_BENCHMARK_CONFIG = BenchmarksConfig(
 class InterpreterBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "IsAndroidSQLiteDriver",
+    driverHasExplainQuery = false,
     config = INTERPRETERS_BENCHMARK_CONFIG,
 )
 
@@ -34,6 +35,7 @@ class InterpreterBenchmarksAndroidDriver : Benchmarks(
 class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
     driverFactory = ::createChicoryAotDriver,
     driverName = "IsChicoryAotDriver",
+    driverHasExplainQuery = true,
     config = INTERPRETERS_BENCHMARK_CONFIG,
 )
 
@@ -41,6 +43,7 @@ class InterpreterBenchmarksChicoryAotDriver : Benchmarks(
 class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
     driverFactory = ::createChicoryInterpreterDriver,
     driverName = "IsChicoryInterpreterDriver",
+    driverHasExplainQuery = true,
     config = INTERPRETERS_BENCHMARK_CONFIG,
 )
 
@@ -48,5 +51,6 @@ class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
 class InterpreterBenchmarksChasmInterpreterDriver : Benchmarks(
     driverFactory = ::createChasmInterpreterDriver,
     driverName = "IsChasmInterpreterDriver",
+    driverHasExplainQuery = true,
     config = INTERPRETERS_BENCHMARK_CONFIG,
 )

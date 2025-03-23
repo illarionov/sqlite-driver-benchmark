@@ -25,6 +25,7 @@ private val NATIVE_BENCHMARK_CONFIG = BenchmarksConfig(
 class NativeBenchmarksBundledDriver : Benchmarks(
     driverFactory = ::createBundledSqliteDriver,
     driverName = "BundledSQLiteDriver",
+    driverHasExplainQuery = true,
     config = NATIVE_BENCHMARK_CONFIG,
 )
 
@@ -32,5 +33,6 @@ class NativeBenchmarksBundledDriver : Benchmarks(
 class NativeBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "AndroidSQLiteDriver",
+    driverHasExplainQuery = false,
     config = NATIVE_BENCHMARK_CONFIG,
 )

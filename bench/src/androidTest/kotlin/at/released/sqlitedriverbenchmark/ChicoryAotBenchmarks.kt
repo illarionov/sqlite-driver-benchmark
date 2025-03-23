@@ -12,6 +12,7 @@ import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_100
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
+import org.junit.Test
 
 @OptIn(ExperimentalBenchmarkConfigApi::class)
 private val CHICORY_AOT_BENCHMARK_CONFIG = BenchmarksConfig(
@@ -27,6 +28,7 @@ private val CHICORY_AOT_BENCHMARK_CONFIG = BenchmarksConfig(
 class ChicoryAotBenchmarksAndroidDriver : Benchmarks(
     driverFactory = ::createAndroidSqliteDriver,
     driverName = "ChicoryAotAndroidSQLiteDriver",
+    driverHasExplainQuery = false,
     config = CHICORY_AOT_BENCHMARK_CONFIG,
 )
 
@@ -34,6 +36,7 @@ class ChicoryAotBenchmarksAndroidDriver : Benchmarks(
 class ChicoryAotBenchmarksAotDriver : Benchmarks(
     driverFactory = ::createChicoryAotDriver,
     driverName = "ChicoryAot349SQLiteDriver",
+    driverHasExplainQuery = true,
     config = CHICORY_AOT_BENCHMARK_CONFIG,
 )
 

@@ -1,6 +1,5 @@
 /*
- * Copyright 2025, the wasm-sqlite-open-helper project authors and contributors. Please see the AUTHORS file
- * for details. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
+ * SPDX-FileCopyrightText: 2025 Alexey Illarionov and the wasm-sqlite-open-helper project contributors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -33,6 +32,7 @@ private const val TAG = "SqliteBenchmark"
 abstract class Benchmarks(
     val driverFactory: (Context) -> SQLiteDriver,
     val driverName: String,
+    val driverHasExplainQuery: Boolean,
     val config: BenchmarksConfig,
 ) : BaseBenchmarksTest(config.microbenchmarkConfig) {
     val driver: SQLiteDriver get() = driverFactory(context)
@@ -50,7 +50,7 @@ abstract class Benchmarks(
                 )
             },
         ) {
-            context.createRawgDatabase(this, config.createDatabaseMaxInsertEntries)
+            context.createRawgDatabaseFromCsv(this, config.createDatabaseMaxInsertEntries)
             insertEntities = queryForString("SELECT COUNT(id) from game")
         }
         Log.i(TAG, "$driverName entities: $insertEntities")
@@ -59,15 +59,16 @@ abstract class Benchmarks(
     @Test
     open fun select_with_paging() {
         var gamesHash: HashWithCount? = null
-        val testDatabasePath = TestDatabaseHolder.createTestDatabase(
-            context = context,
-            dstFile = File(tempFolder.root, "db-${driverName}-selectwithpaging.sqlite")
+        val testDatabasePath = context.copyPreparedRawgDatabase(
+            File(tempFolder.root, "db-${driverName}-selectwithpaging.sqlite")
         )
 
-        val queryPlan = driver.execute(testDatabasePath) {
-            queryTable("EXPLAIN QUERY PLAN $SELECT_GAMES_REQUEST")
+        if (driverHasExplainQuery) {
+            val queryPlan = driver.execute(testDatabasePath) {
+                queryTable("EXPLAIN QUERY PLAN $SELECT_GAMES_REQUEST")
+            }
+            Log.i(TAG, "$driverName Select games query plan: $queryPlan")
         }
-        Log.i(TAG, "$driverName Select games query plan: $queryPlan")
 
         benchmarkRule.measureRepeatedSQLiteDriverBlock(
             driver = driver,
@@ -85,15 +86,16 @@ abstract class Benchmarks(
 
     @Test
     open fun huge_select() {
-        val testDatabasePath = TestDatabaseHolder.createTestDatabase(
-            context = context,
-            dstFile = File(tempFolder.root, "db-${driverName}-selectcompanies.sqlite")
+        val testDatabasePath = context.copyPreparedRawgDatabase(
+            File(tempFolder.root, "db-${driverName}-selectcompanies.sqlite")
         )
 
-        val queryPlan = driver.execute(testDatabasePath) {
-            queryTable("EXPLAIN QUERY PLAN $SELECT_COMPANIES_STATEMENT")
+        if (driverHasExplainQuery) {
+            val queryPlan = driver.execute(testDatabasePath) {
+                queryTable("EXPLAIN QUERY PLAN $SELECT_COMPANIES_STATEMENT")
+            }
+            Log.i(TAG, "$driverName Select companies query plan: $queryPlan")
         }
-        Log.i(TAG, "$driverName Select companies query plan: $queryPlan")
 
         var companiesHash: Long = 0
         benchmarkRule.measureRepeatedSQLiteDriverBlock(driver, { testDatabasePath }) {

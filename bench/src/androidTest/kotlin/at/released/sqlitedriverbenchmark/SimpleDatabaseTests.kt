@@ -16,7 +16,6 @@ import org.junit.Test
 import java.io.File
 import kotlin.time.measureTime
 import kotlin.time.measureTimedValue
-import kotlin.use
 
 @NativeDrivers
 class SimpleDatabaseTests : BaseBenchmarksTest() {
@@ -24,9 +23,8 @@ class SimpleDatabaseTests : BaseBenchmarksTest() {
     fun runCompanies() {
         val driver = createBundledSqliteDriver(context)
         val (testDatabasePath, time) = measureTimedValue {
-            TestDatabaseHolder.createTestDatabase(
-                context = context,
-                dstFile = File(tempFolder.root, "db-selectwithpaging.sqlite")
+            context.copyPreparedRawgDatabase(
+                File(tempFolder.root, "db-selectwithpaging.sqlite")
             )
         }
         Log.i("SqliteBenchmark", "Database created in $time")
