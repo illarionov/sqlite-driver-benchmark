@@ -27,6 +27,8 @@ import org.junit.Test
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 
+private const val TAG = "SqliteBenchmark"
+
 @OptIn(ExperimentalBenchmarkConfigApi::class)
 abstract class Benchmarks(
     val driverFactory: (Context) -> SQLiteDriver,
@@ -51,7 +53,7 @@ abstract class Benchmarks(
             context.createRawgDatabase(this, config.createDatabaseMaxInsertEntries)
             insertEntities = queryForString("SELECT COUNT(id) from game")
         }
-        Log.i("SqliteBenchmark", "$driverName entities: $insertEntities")
+        Log.i(TAG, "$driverName entities: $insertEntities")
     }
 
     @Test
@@ -65,7 +67,7 @@ abstract class Benchmarks(
         val queryPlan = driver.execute(testDatabasePath) {
             queryTable("EXPLAIN QUERY PLAN $SELECT_GAMES_REQUEST")
         }
-        Log.i("SqliteBenchmark", "$driverName Select games query plan: $queryPlan")
+        Log.i(TAG, "$driverName Select games query plan: $queryPlan")
 
         benchmarkRule.measureRepeatedSQLiteDriverBlock(
             driver = driver,
@@ -91,7 +93,7 @@ abstract class Benchmarks(
         val queryPlan = driver.execute(testDatabasePath) {
             queryTable("EXPLAIN QUERY PLAN $SELECT_COMPANIES_STATEMENT")
         }
-        Log.i("SqliteBenchmark", "$driverName Select companies query plan: $queryPlan")
+        Log.i(TAG, "$driverName Select companies query plan: $queryPlan")
 
         var companiesHash: Long = 0
         benchmarkRule.measureRepeatedSQLiteDriverBlock(driver, { testDatabasePath }) {

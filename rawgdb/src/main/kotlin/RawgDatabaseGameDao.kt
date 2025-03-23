@@ -40,7 +40,7 @@ class RawgDatabaseGameDao private constructor(
 
     public companion object {
         val GAMES_HASH_1000 = HashWithCount(-0x494f78e9218684b2, 1000)
-        val GAMES_HASH_100 = HashWithCount(0x17f3eb165fd91f68, 100)
+        val GAMES_HASH_100 = HashWithCount(0x2e515699b97563b, 100)
         val COMPANIES_HASH_1_000_000 = HashWithCount(0xcab31b759d02b5e, 1_000_000)
         val COMPANIES_HASH_5000 = HashWithCount(-0x7cd81af22fc88b04, 5_000)
         val COMPANIES_HASH_1000 = HashWithCount(0x2d06800538d394c2, 1_000)
@@ -55,10 +55,7 @@ class RawgDatabaseGameDao private constructor(
                     FROM game
                         LEFT JOIN game_genre ON game_genre.game_id=game.id
                         LEFT JOIN genre ON genre.id=game_genre.genre_id
-                        LEFT JOIN game_platform ON game.id=game_platform.game_id
-                        LEFT JOIN platform ON platform.id=game_platform.platform_id
                     WHERE (game.released IS NOT NULL)
-                        AND platform.name IN('macOS', 'Linux')
                         AND game.name NOT LIKE '%Puzzle%'
                         AND game.tags NOT LIKE '%NSFW%'
                         AND genre.name IN ('Arcade', 'Sports')

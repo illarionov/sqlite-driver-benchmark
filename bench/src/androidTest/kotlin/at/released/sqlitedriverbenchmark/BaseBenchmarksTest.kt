@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @OptIn(ExperimentalBenchmarkConfigApi::class)
 abstract class BaseBenchmarksTest constructor(
-    val microbenchmarkConfig: MicrobenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5)
+    microbenchmarkConfig: MicrobenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5)
 ) {
     @OptIn(ExperimentalBenchmarkConfigApi::class)
     @get:Rule

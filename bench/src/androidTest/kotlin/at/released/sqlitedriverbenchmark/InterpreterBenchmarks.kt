@@ -14,11 +14,11 @@ import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.
 
 @OptIn(ExperimentalBenchmarkConfigApi::class)
 private val INTERPRETERS_BENCHMARK_CONFIG = BenchmarksConfig(
-    createDatabaseMaxInsertEntries = 500,
-    selectWithPagingStep = 50,
+    createDatabaseMaxInsertEntries = 1000,
+    selectWithPagingStep = 10,
     selectWithPagingHashCount = GAMES_HASH_100,
     companiesHashCount = COMPANIES_HASH_1000,
-    microbenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5, measurementCount = 20),
+    microbenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5, measurementCount = 10),
 )
 
 // AndroidDriver for reference
