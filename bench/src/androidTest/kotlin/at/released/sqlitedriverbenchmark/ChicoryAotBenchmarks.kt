@@ -40,3 +40,10 @@ class ChicoryAotBenchmarksAotDriver : Benchmarks(
     config = CHICORY_AOT_BENCHMARK_CONFIG,
 )
 
+@ChicoryDrivers
+class ChicoryAotBenchmarksByteArrayAotDriver : Benchmarks(
+    driverFactory = { createChicoryAotDriver(it, useByteArrayMemory = true) },
+    driverName = "ChicoryAot349ByteArraySQLiteDriver",
+    driverHasExplainQuery = true,
+    config = CHICORY_AOT_BENCHMARK_CONFIG,
+)

@@ -11,7 +11,7 @@ import androidx.benchmark.ExperimentalBenchmarkConfigApi
 import androidx.benchmark.MicrobenchmarkConfig
 import androidx.sqlite.SQLiteDriver
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1_000_000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_500_000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.HashWithCount
 import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.SELECT_COMPANIES_STATEMENT
@@ -110,7 +110,7 @@ abstract class Benchmarks(
         val createDatabaseMaxInsertEntries: Int = 20000,
         val selectWithPagingStep: Int = 40,
         val selectWithPagingHashCount: HashWithCount = GAMES_HASH_1000,
-        val companiesHashCount: HashWithCount = COMPANIES_HASH_1_000_000,
+        val companiesHashCount: HashWithCount = COMPANIES_HASH_500_000,
         val microbenchmarkConfig: MicrobenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5),
     )
 }

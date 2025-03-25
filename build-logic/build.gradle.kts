@@ -5,6 +5,7 @@
 
 plugins {
     `kotlin-dsl`
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "at.released.sqlitedriverbenchmark"
@@ -14,4 +15,5 @@ dependencies {
     implementation(libs.androidx.sqlite)
     implementation(libs.androidx.sqlite.bundled)
     implementation(libs.kotlin.csv)
+    implementation(libs.kotlinx.serialization)
 }

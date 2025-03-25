@@ -9,6 +9,7 @@ androidxSqlite = "2.5.0-rc02"
 hash4j = "0.20.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
+kotlinx-serialization-json = "1.8.0"
 espressoCore = "3.6.1"
 chicory = "1.1.1"
 wsoh = "0.1-beta02"
@@ -27,6 +28,7 @@ androidx-benchmark = { group = "androidx.benchmark", name = "benchmark-junit4", 
 chicory-runtime = { group = "com.dylibso.chicory", name = "runtime", version.ref = "chicory" }
 hash4j = { group = "com.dynatrace.hash4j", name = "hash4j", version.ref = "hash4j" }
 kotlin-csv = { group = "com.jsoizo", name = "kotlin-csv-jvm", version.ref = "kotlin-csv" }
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 wsoh-sqlite-driver = { group = "at.released.wasm-sqlite-driver", name = "sqlite-driver", version.ref = "wsoh" }
 wsoh-sqlite-embedder-chicory = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chicory", version.ref = "wsoh" }
 wsoh-sqlite-embedder-chasm = { group = "at.released.wasm-sqlite-driver", name = "sqlite-embedder-chasm", version.ref = "wsoh" }
@@ -40,5 +42,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 androidx-benchmark = { id = "androidx.benchmark", version.ref = "androidxBenchmark" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 

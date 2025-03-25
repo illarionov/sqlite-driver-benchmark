@@ -17,13 +17,17 @@ import at.released.wasm.sqlite.binary.base.WasmSqliteConfiguration
 import at.released.wasm.sqlite.driver.WasmSQLiteDriver
 import at.released.wasm.sqlite.open.helper.chasm.ChasmSqliteEmbedder
 import at.released.wasm.sqlite.open.helper.chicory.ChicorySqliteEmbedder
+import com.dylibso.chicory.runtime.ByteArrayMemory
 import io.github.charlietap.chasm.config.RuntimeConfig
 
 fun createBundledSqliteDriver(context: Context) = BundledSQLiteDriver()
 
 fun createAndroidSqliteDriver(context: Context) = AndroidSQLiteDriver()
 
-internal fun createChicoryAotDriver(context: Context): SQLiteDriver = WasmSQLiteDriver(ChicorySqliteEmbedder) {
+internal fun createChicoryAotDriver(
+    context: Context,
+    useByteArrayMemory: Boolean = false,
+): SQLiteDriver = WasmSQLiteDriver(ChicorySqliteEmbedder) {
     openParams {
         openFlags = setOf()
     }
@@ -32,28 +36,40 @@ internal fun createChicoryAotDriver(context: Context): SQLiteDriver = WasmSQLite
             override val wasmMinMemorySize: Long = 256 * 1024 * 1024
         }
         machineFactory = ::SqliteWasmEmscriptenAot349Machine
+        if (useByteArrayMemory) {
+            memoryFactory = ::ByteArrayMemory
+        }
     }
 }
 
-internal fun createChicoryInterpreterDriver(context: Context): SQLiteDriver {
+internal fun createChicoryInterpreterDriver(
+    context: Context,
+    useByteArrayMemory: Boolean = false,
+): SQLiteDriver {
     return WasmSQLiteDriver(ChicorySqliteEmbedder, context) {
         openParams { openFlags = setOf() }
         embedder {
             sqlite3Binary = object : WasmSqliteConfiguration by SqliteWasmEmscripten349 {
                 override val wasmMinMemorySize: Long = 256 * 1024 * 1024
             }
+            if (useByteArrayMemory) {
+                memoryFactory = ::ByteArrayMemory
+            }
         }
     }
 }
 
-internal fun createChasmInterpreterDriver(context: Context): SQLiteDriver {
+internal fun createChasmInterpreterDriver(
+    context: Context,
+    bytecodeFusion: Boolean = true,
+): SQLiteDriver {
     return WasmSQLiteDriver(ChasmSqliteEmbedder, context) {
         openParams { openFlags = setOf() }
         embedder {
             sqlite3Binary = object : WasmSqliteConfiguration by SqliteWasmEmscripten349 {
                 override val wasmMinMemorySize = 256 * 1024 * 1024L
             }
-            runtimeConfig = RuntimeConfig(bytecodeFusion = true)
+            runtimeConfig = RuntimeConfig(bytecodeFusion = bytecodeFusion)
         }
     }
 }

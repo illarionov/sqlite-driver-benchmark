@@ -18,7 +18,7 @@ private val INTERPRETERS_BENCHMARK_CONFIG = BenchmarksConfig(
     selectWithPagingStep = 10,
     selectWithPagingHashCount = GAMES_HASH_100,
     companiesHashCount = COMPANIES_HASH_1000,
-    microbenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5, measurementCount = 10),
+    microbenchmarkConfig = MicrobenchmarkConfig(warmupCount = 5, measurementCount = 25),
 )
 
 // AndroidDriver for reference
@@ -48,9 +48,25 @@ class InterpreterBenchmarksChicoryInterpreterDriver : Benchmarks(
 )
 
 @InterpreterDrivers
+class InterpreterBenchmarksChicoryByteArrayInterpreterDriver : Benchmarks(
+    driverFactory =  { createChicoryInterpreterDriver(it, useByteArrayMemory = true) } ,
+    driverName = "IsChicoryInterpreterDriver",
+    driverHasExplainQuery = true,
+    config = INTERPRETERS_BENCHMARK_CONFIG,
+)
+
+@InterpreterDrivers
 class InterpreterBenchmarksChasmInterpreterDriver : Benchmarks(
     driverFactory = ::createChasmInterpreterDriver,
     driverName = "IsChasmInterpreterDriver",
+    driverHasExplainQuery = true,
+    config = INTERPRETERS_BENCHMARK_CONFIG,
+)
+
+@InterpreterDrivers
+class InterpreterBenchmarksChasmNoFusionInterpreterDriver : Benchmarks(
+    driverFactory = { createChasmInterpreterDriver(it, bytecodeFusion = false) },
+    driverName = "IsChasmNoFusionInterpreterDriver",
     driverHasExplainQuery = true,
     config = INTERPRETERS_BENCHMARK_CONFIG,
 )

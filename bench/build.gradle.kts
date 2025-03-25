@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import at.released.sqlitedriverbenchmark.gradle.ConvertBenchmarkReportsTask
 import at.released.sqlitedriverbenchmark.gradle.PrepareDatabaseTask
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     id("at.released.sqlitedriverbenchmark.gradle.prefilldb")
@@ -81,6 +81,8 @@ androidComponents {
     }
 }
 
+tasks.register<ConvertBenchmarkReportsTask>("convertBenchmarkReports")
+
 dependencies {
     implementation("at.released.sqlitedriverbenchmark:rawgdb")
     implementation(libs.androidx.benchmark)
@@ -103,4 +105,3 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-

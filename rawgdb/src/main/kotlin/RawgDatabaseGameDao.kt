@@ -39,9 +39,11 @@ class RawgDatabaseGameDao private constructor(
     }
 
     public companion object {
-        val GAMES_HASH_1000 = HashWithCount(-0x494f78e9218684b2, 1000)
+        val GAMES_HASH_1000 = HashWithCount(0x61606bb547c18a13, 1000)
+        val GAMES_HASH_3000 = HashWithCount(0xe1ad1e364ccb674, 3000)
+        val GAMES_HASH_5000 = HashWithCount(0x717c1a421cab205f, 5000)
         val GAMES_HASH_100 = HashWithCount(0x2e515699b97563b, 100)
-        val COMPANIES_HASH_1_000_000 = HashWithCount(0xcab31b759d02b5e, 1_000_000)
+        val COMPANIES_HASH_500_000 = HashWithCount(-0x1618743a0486f11e, 500_000)
         val COMPANIES_HASH_5000 = HashWithCount(-0x7cd81af22fc88b04, 5_000)
         val COMPANIES_HASH_1000 = HashWithCount(0x2d06800538d394c2, 1_000)
         val COMPANIES_HASH_100 = HashWithCount(0x2d06800538d394c2, 100)

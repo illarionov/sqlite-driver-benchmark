@@ -9,15 +9,16 @@ package at.released.sqlitedriverbenchmark
 import androidx.benchmark.ExperimentalBenchmarkConfigApi
 import androidx.benchmark.MicrobenchmarkConfig
 import at.released.sqlitedriverbenchmark.Benchmarks.BenchmarksConfig
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_1_000_000
-import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_1000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.COMPANIES_HASH_500_000
+import at.released.sqlitedriverbenchmark.database.RawgDatabaseGameDao.Companion.GAMES_HASH_3000
+import org.junit.Test
 
 @OptIn(ExperimentalBenchmarkConfigApi::class)
 private val NATIVE_BENCHMARK_CONFIG = BenchmarksConfig(
-    createDatabaseMaxInsertEntries = 20000,
-    selectWithPagingStep = 40,
-    selectWithPagingHashCount = GAMES_HASH_1000,
-    companiesHashCount = COMPANIES_HASH_1_000_000,
+    createDatabaseMaxInsertEntries = 25000,
+    selectWithPagingStep = 20,
+    selectWithPagingHashCount = GAMES_HASH_3000,
+    companiesHashCount = COMPANIES_HASH_500_000,
     microbenchmarkConfig = MicrobenchmarkConfig(),
 )
 
