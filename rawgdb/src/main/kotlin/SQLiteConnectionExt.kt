@@ -12,10 +12,10 @@ import androidx.sqlite.execSQL
 import kotlin.use
 
 inline fun <R> SQLiteConnection.transaction(
-    isDefferred: Boolean = true,
+    isDeferred: Boolean = true,
     crossinline block: () -> R
 ): R {
-    execSQL(if (isDefferred) "BEGIN" else "BEGIN EXCLUSIVE")
+    execSQL(if (isDeferred) "BEGIN" else "BEGIN EXCLUSIVE")
     val result =  try {
         block()
     } catch (ex: Throwable) {
