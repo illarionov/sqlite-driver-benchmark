@@ -141,6 +141,11 @@
             <pgp value="68E9A2179F6217B5927483657F23F11431A24556"/>
          </artifact>
       </component>
+      <component group="com.dynatrace.hash4j" name="hash4j" version="0.21.0">
+         <artifact name="hash4j-0.21.0.jar">
+            <pgp value="68E9A2179F6217B5927483657F23F11431A24556"/>
+         </artifact>
+      </component>
       <component group="com.google.android" name="annotations" version="4.1.1.4">
          <artifact name="annotations-4.1.1.4.jar">
             <pgp value="0F07D1201BDDAB67CFB84EB479752DB6C966F0B8"/>
