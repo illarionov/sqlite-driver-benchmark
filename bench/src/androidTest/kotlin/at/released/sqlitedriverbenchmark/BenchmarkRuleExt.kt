@@ -22,8 +22,9 @@ fun <R> BenchmarkRule.measureRepeatedSQLiteDriverBlock(
         val databaseFile = path?.invoke()?.toString() ?: ":memory:"
         val connection = driver.open(databaseFile)
         try {
+            val testConnection = connection.setupRawgDbDefaults()
             resumeMeasurement()
-            block(connection.setupRawgDbDefaults())
+            block(testConnection)
         } finally {
             connection.close()
         }
