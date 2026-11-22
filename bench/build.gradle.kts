@@ -83,6 +83,10 @@ androidComponents {
 
 tasks.register<ConvertBenchmarkReportsTask>("convertBenchmarkReports")
 
+tasks.withType<Test>().configureEach {
+    failOnNoDiscoveredTests = false
+}
+
 dependencies {
     implementation("at.released.sqlitedriverbenchmark:rawgdb")
     implementation(libs.androidx.benchmark)
