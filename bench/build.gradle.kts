@@ -1,21 +1,21 @@
 /*
- * SPDX-FileCopyrightText: 2025 Alexey Illarionov and the wasm-sqlite-open-helper project contributors
+ * SPDX-FileCopyrightText: 2025-2026 Alexey Illarionov and the wasm-sqlite-open-helper project contributors
  * SPDX-License-Identifier: Apache-2.0
  */
 
 import at.released.sqlitedriverbenchmark.gradle.ConvertBenchmarkReportsTask
 import at.released.sqlitedriverbenchmark.gradle.PrepareDatabaseTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("at.released.sqlitedriverbenchmark.gradle.prefilldb")
     alias(libs.plugins.android.library)
     alias(libs.plugins.androidx.benchmark)
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "at.released.sqlitedriverbenchmark"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 28
@@ -28,7 +28,7 @@ android {
     testBuildType = "release"
 
     testOptions {
-        targetSdk = 35
+        targetSdk = 37
         unitTests {
             isIncludeAndroidResources = true
             isReturnDefaultValues = false
@@ -58,9 +58,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 

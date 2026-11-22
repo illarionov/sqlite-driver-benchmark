@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: 2025 Alexey Illarionov and the wasm-sqlite-open-helper project contributors
+ * SPDX-FileCopyrightText: 2025-2026 Alexey Illarionov and the wasm-sqlite-open-helper project contributors
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -17,21 +17,10 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    buildscript {
-        repositories {
-            mavenCentral()
-            maven {
-                url = uri("https://storage.googleapis.com/r8-releases/raw")
-            }
-        }
-        dependencies {
-            classpath("com.android.tools:r8:8.9.34")
-        }
-    }
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.10.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 dependencyResolutionManagement {
