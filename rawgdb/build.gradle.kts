@@ -5,6 +5,7 @@
  */
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
@@ -15,6 +16,8 @@ group = "at.released.sqlitedriverbenchmark"
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.JVM_17
+        languageVersion = KotlinVersion.KOTLIN_2_2
+        coreLibrariesVersion = "2.2.21"
     }
 }
 
